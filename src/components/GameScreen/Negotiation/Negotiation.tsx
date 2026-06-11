@@ -78,7 +78,7 @@ export default function Negotiation() {
         {neg.chairId ? (
           <img
             className={styles.opponentAvatar}
-            src={`/characters/${neg.chairId}_head.png`}
+            src={`${import.meta.env.BASE_URL}characters/${neg.chairId}_head.png`}
             alt={neg.npcName}
           />
         ) : (

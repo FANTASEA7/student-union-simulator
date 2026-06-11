@@ -61,7 +61,7 @@ export default function WorkBadgeCG() {
           <div className={styles.photoSlot}>
             <img
               className={styles.photoImg}
-              src="/avatar.png"
+              src={`${import.meta.env.BASE_URL}avatar.png`}
               alt="证件照"
             />
           </div>

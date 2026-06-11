@@ -63,7 +63,7 @@ export default function ChairRelationsPanel() {
               <div className={styles.chairHeader}>
                 <img
                   className={styles.chairAvatar}
-                  src={`/characters/${dept.id}_head.png`}
+                  src={`${import.meta.env.BASE_URL}characters/${dept.id}_head.png`}
                   alt={dept.headName}
                 />
                 <div className={styles.chairInfo}>

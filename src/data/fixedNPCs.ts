@@ -16,7 +16,7 @@ export const MAIDAN: LoveNPC = {
   affinity: 0,
   met: false,
   canRomance: false,
-  avatar: "/characters/maidan.png",
+  avatar: "characters/maidan.png",
   status: "stranger",
   dialogues: {
     firstMeet: "哟！新来的？我叫买单哥，以后吃饭找我，哥请客！",
@@ -41,7 +41,7 @@ export const XIANGYU: LoveNPC = {
   affinity: 0,
   met: false,
   canRomance: false,
-  avatar: "/characters/xiangyu.png",
+  avatar: "characters/xiangyu.png",
   status: "stranger",
   dialogues: {
     firstMeet: "嘿！我叫香芋！跟你说，这学校没有我搞不定的事——呃，大部分吧。",
@@ -66,7 +66,7 @@ export const TAOZI: LoveNPC = {
   affinity: 0,
   met: false,
   canRomance: false,
-  avatar: "/characters/taozi.png",
+  avatar: "characters/taozi.png",
   status: "stranger",
   dialogues: {
     firstMeet: "你好呀，我叫桃子。有什么需要帮忙的可以找我～",
@@ -91,7 +91,7 @@ export const SUNIAN: LoveNPC = {
   affinity: 0,
   met: false,
   canRomance: true,
-  avatar: "/characters/sunian.png",
+  avatar: "characters/sunian.png",
   status: "stranger",
   dialogues: {
     firstMeet: "啊，你好...我是苏念，心理部的。刚才不小心看入神了，没注意到你。",
@@ -116,7 +116,7 @@ export const ZHANGYI: LoveNPC = {
   affinity: 0,
   met: false,
   canRomance: false,
-  avatar: "/characters/zhangyi.png",
+  avatar: "characters/zhangyi.png",
   status: "stranger",
   dialogues: {
     firstMeet: "呵呵，新人？很好。记住，在这个地方，站对位置比能力重要一万倍。",

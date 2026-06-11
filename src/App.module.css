@@ -16,5 +16,5 @@
       rgba(245,240,235,0.04) 70%,
       rgba(200,170,140,0.1) 100%
     ),
-    url('/main_bg.png') center / cover no-repeat;
+    /* main background handled in App.tsx inline style for BASE_URL compat */
 }

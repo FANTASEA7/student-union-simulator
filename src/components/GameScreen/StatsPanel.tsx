@@ -60,7 +60,7 @@ export default function StatsPanel() {
       {/* RPG 角色卡片 */}
       <div className={styles.heroCard}>
         <div className={styles.avatarFrame}>
-          <img className={styles.avatarImg} src="/avatar.png" alt="证件照" />
+          <img className={styles.avatarImg} src={`${import.meta.env.BASE_URL}avatar.png`} alt="证件照" />
         </div>
         <div className={styles.playerName}>{playerName}</div>
         <div className={styles.playerTitle}>{STAGE_LABELS[stage]}</div>

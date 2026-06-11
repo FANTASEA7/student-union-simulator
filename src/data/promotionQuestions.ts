@@ -261,7 +261,7 @@ export const HAMA_PROFILE = {
   personality: "刻薄抠门，掌握经费审批和人事大权。说话阴阳怪气，但心底其实希望学生成长——只是从不直接说出口。",
   color: "#8b4513",
   icon: "👨‍🏫",
-  avatar: "/characters/hama.png",
+  avatar: "characters/hama.png",
 };
 
 export const ZHANGYI_PROFILE = {
@@ -271,5 +271,5 @@ export const ZHANGYI_PROFILE = {
   personality: "心机深沉，说话滴水不漏。曾在学生会爬到高位又被拉下来，对权力有执念。",
   color: "#6c3483",
   icon: "🎭",
-  avatar: "/characters/zhangyi.png",
+  avatar: "characters/zhangyi.png",
 };

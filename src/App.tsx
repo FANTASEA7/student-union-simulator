@@ -104,7 +104,7 @@ function AppRouter() {
 export default function App() {
   return (
     <GameProvider>
-      <div className={styles.app}>
+      <div className={styles.app} style={{ backgroundImage: `url('${import.meta.env.BASE_URL}main_bg.png')` }}>
         <AppRouter />
       </div>
     </GameProvider>

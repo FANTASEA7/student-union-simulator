@@ -129,7 +129,7 @@ export default function TitleScreen() {
     <div className={styles.container}>
       <div className={styles.overlay} />
       <div className={styles.content}>
-        <img className={styles.emblem} src="/characters/school_logo.png" alt="牛马大学" />
+        <img className={styles.emblem} src={`${import.meta.env.BASE_URL}characters/school_logo.png`} alt="牛马大学" />
         <h1 className={styles.title}>学生会模拟器</h1>
         <p className={styles.subtitle}>牛马大学 · 命运的十字路口</p>
         <div className={styles.buttons}>

@@ -86,7 +86,7 @@ export default function EventDialog() {
           <>
             <img
               className={styles.portrait}
-              src={`/characters/${dept.id}_head.png`}
+              src={`${import.meta.env.BASE_URL}characters/${dept.id}_head.png`}
               alt={dept.headName}
             />
             <div className={styles.charName}>{dept.headName}</div>

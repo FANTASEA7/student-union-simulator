@@ -178,7 +178,7 @@ export default function FirstPersonDialogue() {
         >
           <div className={styles.portrait}>
             {currentLine.avatar ? (
-              <img src={currentLine.avatar} alt={currentLine.speakerName} className={styles.portraitImg} />
+              <img src={`${import.meta.env.BASE_URL}${currentLine.avatar}`} alt={currentLine.speakerName} className={styles.portraitImg} />
             ) : (
               <div className={styles.portraitEmoji}>{currentLine.speakerEmoji}</div>
             )}

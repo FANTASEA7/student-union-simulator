@@ -34,7 +34,7 @@ export default function InterviewScreen() {
       <div className={styles.leftPanel}>
         <img
           className={styles.portrait}
-          src={`/characters/${department}_head.png`}
+          src={`${import.meta.env.BASE_URL}characters/${department}_head.png`}
           alt={dept.headName}
         />
         <div className={styles.headName}>{dept.headName}</div>

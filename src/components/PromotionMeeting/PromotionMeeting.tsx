@@ -104,7 +104,7 @@ export default function PromotionMeeting() {
           style={{ borderColor: speaker.color }}
         >
           {speaker.avatar ? (
-            <img src={speaker.avatar} alt={speaker.name} className={styles.speakerAvatar} />
+            <img src={`${import.meta.env.BASE_URL}${speaker.avatar}`} alt={speaker.name} className={styles.speakerAvatar} />
           ) : (
             <span className={styles.speakerIcon}>{speaker.icon}</span>
           )}

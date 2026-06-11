@@ -25,7 +25,7 @@ export default function DepartmentSelect() {
           >
             <img
               className={styles.portrait}
-              src={`/characters/${dept.id}_head.png`}
+              src={`${import.meta.env.BASE_URL}characters/${dept.id}_head.png`}
               alt={dept.headName}
             />
             <div className={styles.deptName}>{dept.name}</div>

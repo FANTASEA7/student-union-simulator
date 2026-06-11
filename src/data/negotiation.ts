@@ -5,7 +5,7 @@ import { NegotiationState, Stats, GamePhase, Department } from "../types/game";
 interface NegotiationConfig {
   npcName: string;
   npcEmoji: string;
-  npcPersonality: "gentle" | "mischievous" | "sunny" | "shy";
+  npcPersonality: "gentle" | "mischievous" | "sunny" | "shy" | "tsundere";
   context: string;
   stakes: { win: string; lose: string };
   onWin: { effects: { stat: keyof Stats; delta: number }[]; flags?: string[] };
@@ -67,7 +67,7 @@ export function createChairNegotiation(
   chairName: string,
   chairEmoji: string,
   chairId: Department,
-  chairPersonality: "gentle" | "mischievous" | "sunny" | "shy",
+  chairPersonality: "gentle" | "mischievous" | "sunny" | "shy" | "tsundere",
   returnTo: GamePhase = "chair_relations"
 ): NegotiationState {
   return createNegotiation({

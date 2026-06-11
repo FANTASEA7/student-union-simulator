@@ -1013,7 +1013,6 @@ export const EVENTS: GameEvent[] = [
               { stat: "organization", delta: -5 },
               { stat: "stress", delta: -5 },
             ],
-            climateEffects: { clubSatisfaction: -5 },
           },
         },
       },

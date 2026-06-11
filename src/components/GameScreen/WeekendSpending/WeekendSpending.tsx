@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useGameState, useGameDispatch } from "../../../context/GameContext";
 import { EXPENSE_OPTIONS } from "../../../data/expenseOptions";
+import { Stats } from "../../../types/game";
 import styles from "./WeekendSpending.module.css";
 
 export default function WeekendSpending() {
@@ -102,7 +103,7 @@ export default function WeekendSpending() {
 
     // 消费减压: 每¥10降低1点压力
     const stressReduction = -Math.floor(allowanceTotal / 10);
-    const finishChanges: { stat: string; delta: number }[] = [];
+    const finishChanges: { stat: keyof Stats; delta: number }[] = [];
     if (stressReduction < 0) {
       finishChanges.push({ stat: "stress", delta: stressReduction });
     }

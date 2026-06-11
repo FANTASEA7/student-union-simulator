@@ -109,7 +109,7 @@ function generateRandomApplicant(index: number): RecruitApplicant {
   const gender = Math.random() < 0.5 ? "male" : "female";
   const baseEnergy = quality === "rare" ? 70 + Math.floor(Math.random() * 20) : 40 + Math.floor(Math.random() * 40);
   const qualityLabel = quality === "rare" ? "稀有品质" : "普通品质";
-  const energyTips = energy >= 80 ? "精力充沛，能承担较多工作任务" : energy >= 60 ? "精力尚可，合理分配能胜任日常工作" : "精力偏低，适合轻量级辅助工作";
+  const energyTips = baseEnergy >= 80 ? "精力充沛，能承担较多工作任务" : baseEnergy >= 60 ? "精力尚可，合理分配能胜任日常工作" : "精力偏低，适合轻量级辅助工作";
   return {
     id: `random_recruit_${index}`,
     name: generateRandomName(gender),
@@ -122,7 +122,7 @@ function generateRandomApplicant(index: number): RecruitApplicant {
     specialty: pickRandom(SPECIALTIES),
     motto: pickRandom(MOTTOS),
     questionsAsked: 0,
-    tip: `${qualityLabel} · 精力${energy}\n入职加成：${quality === "rare" ? "随机两项属性+2" : "随机一项属性+1"}\n特质：${energyTips}`,
+    tip: `${qualityLabel} · 精力${baseEnergy}\n入职加成：${quality === "rare" ? "随机两项属性+2" : "随机一项属性+1"}\n特质：${energyTips}`,
   };
 }
 

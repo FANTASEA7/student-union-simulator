@@ -1,5 +1,5 @@
 // src/data/combos.ts
-import { ActivityDef, WeeklyCombo, CampusClimateDelta } from "../types/game";
+import { ActivityDef, ActivityType, Stats, WeeklyCombo, CampusClimateDelta } from "../types/game";
 
 type ComboCategory = "tag" | "streak" | "rarity" | "risk";
 
@@ -30,7 +30,7 @@ interface ComboDef {
   icon: string;
   category: ComboCategory;
   pattern: ComboPattern;
-  statEffects: { stat: string; delta: number }[];
+  statEffects: { stat: keyof Stats; delta: number }[];
   climateEffects: CampusClimateDelta;
 }
 
@@ -574,7 +574,7 @@ export function findPotentialCombos(
         if (typeSet.size === 4) {
           const all = ["study", "social", "work", "rest", "volunteer"];
           for (const t of all) {
-            if (!typeSet.has(t)) {
+            if (!typeSet.has(t as ActivityType)) {
               bestTag = t;
               break;
             }

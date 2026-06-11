@@ -607,7 +607,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const nextSemester = state.semesterWeek >= 16 ? state.semester + 1 : state.semester;
       const isSemesterEnd = state.semesterWeek >= 16;
       // Burnout flag
-      const burnoutFlag = decayedStats.stress > 75 ? { burnout_warning: true } : {};
+      const burnoutFlag: Record<string, boolean> = decayedStats.stress > 75 ? { burnout_warning: true } : {};
       // Allowance payout: every 4 weeks
       const allowancePayout = state.semesterWeek % 4 === 0 ? 800 : 0;
       const withAllowance = allowancePayout
@@ -618,7 +618,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       const finalStats = scholarshipBonus
         ? { ...withAllowance, allowance: withAllowance.allowance + 300, charisma: clampStat(withAllowance.charisma + 5) }
         : withAllowance;
-      const weekFlags = { ...state.flags, ...burnoutFlag };
+      const weekFlags: Record<string, boolean> = { ...state.flags, ...burnoutFlag };
       if (scholarshipBonus) weekFlags["scholarship_awarded"] = true;
       // Semester end: reset chair bonus usage
       const resetBonuses = isSemesterEnd

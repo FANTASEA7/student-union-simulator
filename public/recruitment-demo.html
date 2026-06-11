@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>招干事系统 - UI预览</title>
+<link href="https://fonts.googleapis.com/css2?family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: 'ZCOOL XiaoWei', 'Microsoft YaHei', sans-serif; background:#0d1b2a; color:#e0e0e0; }
+
+.tabs { display:flex; background:rgba(0,0,0,0.4); border-bottom:1px solid rgba(240,192,64,0.2); }
+.tab { padding:14px 32px; cursor:pointer; font-size:16px; color:rgba(255,255,255,0.5); border-bottom:2px solid transparent; transition:all .2s; letter-spacing:1px; }
+.tab:hover { color:rgba(255,255,255,0.8); }
+.tab.active { color:#f0c040; border-bottom-color:#f0c040; background:rgba(240,192,64,0.06); }
+
+/* ═══ BRIEFING ═══ */
+.briefing {
+  display:none; height:calc(100vh - 53px);
+  background:linear-gradient(170deg,#0d1b2a 0%,#1b2838 40%,#1a1a2e 100%);
+  align-items:center; justify-content:center; position:relative; overflow:hidden;
+}
+.briefing.active { display:flex; }
+.briefing::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse at 30% 20%,rgba(240,192,64,0.06) 0%,transparent 60%),
+             radial-gradient(ellipse at 70% 80%,rgba(240,192,64,0.04) 0%,transparent 60%);
+}
+.briefing-card {
+  position:relative; z-index:1; text-align:center; max-width:520px; padding:48px 40px;
+  background:rgba(255,255,255,0.06); backdrop-filter:blur(20px);
+  border:1px solid rgba(240,192,64,0.15); border-radius:24px;
+  box-shadow:0 8px 48px rgba(0,0,0,0.4);
+}
+.briefing-card .icon { font-size:56px; margin-bottom:12px; filter:drop-shadow(0 0 16px rgba(240,192,64,0.4)); }
+.briefing-card h1 { font-size:36px; color:#f0c040; margin:0 0 8px; text-shadow:0 0 20px rgba(240,192,64,0.3); letter-spacing:2px; }
+.briefing-card .sub { font-size:20px; color:#f5d060; margin:0 0 20px; opacity:0.85; }
+.briefing-card .divider { width:60px; height:2px; margin:0 auto 24px; background:linear-gradient(90deg,transparent,#f0c040,transparent); opacity:0.5; }
+.briefing-card .desc { font-size:15px; color:rgba(255,255,255,0.7); line-height:1.8; margin-bottom:24px; }
+.briefing-card .cost { font-size:13px; color:#f5d060; opacity:0.6; margin-bottom:28px; }
+.briefing-card button {
+  padding:14px 48px; font-family:inherit; font-size:18px; color:#0d1b2a;
+  background:linear-gradient(135deg,#f0c040,#d4a017); border:none; border-radius:12px;
+  cursor:pointer; transition:transform .2s,box-shadow .2s; letter-spacing:1px;
+}
+.briefing-card button:hover { transform:translateY(-2px); box-shadow:0 6px 24px rgba(240,192,64,0.35); }
+
+/* ═══ SELECT ═══ */
+.select {
+  display:none; height:calc(100vh - 53px); overflow-y:auto; padding:32px 40px;
+  background:linear-gradient(170deg,#faf6f0 0%,#f0ebe0 100%);
+}
+.select.active { display:block; }
+.select h2 { text-align:center; font-size:28px; color:#152238; margin-bottom:6px; }
+.select .sub { text-align:center; font-size:14px; color:#5a6d80; margin-bottom:28px; }
+.sec-title { font-size:16px; color:#3a4d60; margin:0 0 14px; padding-left:4px; }
+.sec { margin-bottom:28px; }
+.grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(200px,1fr)); gap:16px; }
+
+.card {
+  position:relative; background:rgba(255,255,255,0.85); backdrop-filter:blur(8px);
+  border:2px solid #a0b0c0; border-radius:16px; padding:18px 16px 14px;
+  cursor:pointer; transition:transform .2s,box-shadow .2s; text-align:left; overflow:hidden;
+}
+.card:hover { transform:translateY(-3px); box-shadow:0 8px 28px rgba(0,0,0,0.12); }
+.card.legendary { border-color:#f0c040; box-shadow:0 0 20px rgba(240,192,64,0.5); }
+.card.epic { border-color:#a855f7; box-shadow:0 0 16px rgba(168,85,247,0.4); }
+.card.rare { border-color:#3b82f6; box-shadow:0 0 12px rgba(59,130,246,0.3); }
+.card.hired { background:rgba(39,174,96,0.08); border-color:rgba(39,174,96,0.4); box-shadow:0 0 20px rgba(39,174,96,0.3); }
+.card.rejected { opacity:0.5; border-style:dashed; }
+.card-header { display:flex; justify-content:space-between; margin-bottom:8px; }
+.card-quality { font-size:12px; font-weight:600; letter-spacing:1px; }
+.card-quality.legendary { color:#b8860b; }
+.card-quality.epic { color:#7c3aed; }
+.card-quality.rare { color:#2563eb; }
+.card-quality.common { color:#6b7280; }
+.card-energy { font-size:13px; color:#3a4d60; font-weight:500; }
+.card-name { font-size:18px; font-weight:600; color:#152238; margin-bottom:8px; }
+.card-info { display:flex; gap:12px; font-size:13px; color:#5a6d80; margin-bottom:10px; }
+.card-tags { display:flex; flex-wrap:wrap; gap:6px; }
+.card-tag { padding:2px 8px; font-size:11px; background:rgba(21,34,56,0.06); border-radius:6px; color:#3a4d60; }
+.card-motto { margin-top:8px; font-size:11px; font-style:italic; color:#8a9bb0; }
+.badge {
+  position:absolute; top:10px; right:10px; padding:3px 10px; font-size:11px; font-weight:600;
+  color:#fff; background:#27ae60; border-radius:8px; box-shadow:0 2px 8px rgba(39,174,96,0.3);
+}
+.badge-reject {
+  position:absolute; top:10px; right:10px; padding:3px 10px; font-size:11px; font-weight:600;
+  color:#5a6d80; background:rgba(0,0,0,0.06); border-radius:8px;
+}
+
+/* ═══ INTERVIEW ═══ */
+.interview {
+  display:none; height:calc(100vh - 53px); flex-direction:column;
+  background:linear-gradient(170deg,#1a1a2e 0%,#16213e 50%,#0d1b2a 100%); overflow:hidden;
+}
+.interview.active { display:flex; }
+.interview-top {
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 32px; background:rgba(13,27,42,0.7); backdrop-filter:blur(12px);
+  border-bottom:1px solid rgba(240,192,64,0.12);
+}
+.interview-top .title { font-size:22px; color:#f0c040; letter-spacing:1px; }
+.interview-top .info { font-size:14px; color:rgba(255,255,255,0.55); }
+.interview-main { flex:1; display:flex; overflow:hidden; }
+
+/* Left: candidate */
+.interview-left {
+  width:320px; min-width:280px; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; padding:40px 24px; gap:28px;
+  border-right:1px solid rgba(255,255,255,0.06); background:rgba(255,255,255,0.03);
+}
+.avatar {
+  width:120px; height:120px; border-radius:50%; background:rgba(255,255,255,0.08);
+  border:3px solid rgba(240,192,64,0.3); display:flex; align-items:center; justify-content:center;
+  box-shadow:0 0 32px rgba(240,192,64,0.1);
+}
+.avatar span { font-size:48px; }
+.interview-left .c-name { font-size:24px; color:#fff; letter-spacing:2px; }
+.interview-left .c-quality { font-size:14px; font-weight:600; color:#f0c040; }
+.interview-left .c-energy { font-size:14px; color:rgba(255,255,255,0.5); }
+
+.resume-btn {
+  padding:16px 36px; font-family:inherit; font-size:18px; color:#fff;
+  background:linear-gradient(135deg,#c0392b,#e74c3c); border:2px solid #e74c3c;
+  border-radius:16px; cursor:pointer; transition:transform .2s,box-shadow .2s;
+  box-shadow:0 4px 20px rgba(231,76,60,0.35); animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%,100% { box-shadow:0 4px 20px rgba(231,76,60,0.35); }
+  50% { box-shadow:0 4px 30px rgba(231,76,60,0.6); }
+}
+.resume-btn:hover { transform:scale(1.05); box-shadow:0 6px 28px rgba(231,76,60,0.5); }
+
+/* Right panel */
+.interview-right { flex:1; overflow-y:auto; padding:32px 40px; }
+.resume-card {
+  background:rgba(255,255,255,0.92); backdrop-filter:blur(12px);
+  border-radius:20px; padding:28px 32px; border:1px solid rgba(0,0,0,0.06);
+  box-shadow:0 4px 24px rgba(0,0,0,0.15); margin-bottom:24px;
+}
+.resume-card h3 { font-size:20px; color:#152238; margin-bottom:20px; padding-bottom:12px; border-bottom:2px solid rgba(21,34,56,0.08); }
+.resume-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px 24px; }
+.resume-row { display:flex; flex-direction:column; gap:2px; font-size:14px; color:#1b3a5c; }
+.resume-row .lbl { font-size:12px; color:#8a9bb0; font-weight:500; text-transform:uppercase; }
+.resume-row .motto { font-style:italic; color:#5a6d80; }
+
+.q-section { margin-bottom:20px; }
+.q-section h4 { font-size:16px; color:rgba(255,255,255,0.9); margin-bottom:8px; }
+.q-section .hint { font-size:13px; color:rgba(255,255,255,0.5); margin-bottom:14px; }
+.q-btn {
+  display:flex; align-items:flex-start; gap:10px; width:100%; padding:14px 18px;
+  background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px; cursor:pointer; transition:background .2s,border-color .2s;
+  text-align:left; color:rgba(255,255,255,0.9); font-family:inherit; font-size:14px; margin-bottom:10px;
+}
+.q-btn:hover { background:rgba(255,255,255,0.14); border-color:rgba(240,192,64,0.4); }
+.q-cat { font-size:12px; color:#f5d060; white-space:nowrap; flex-shrink:0; }
+
+.result { text-align:center; padding:40px 0; }
+.result .icon { font-size:48px; display:block; margin-bottom:12px; }
+.result h3 { font-size:28px; margin-bottom:8px; letter-spacing:2px; }
+.result .sub { font-size:15px; color:rgba(255,255,255,0.6); }
+.result .hired h3 { color:#2ecc71; text-shadow:0 0 20px rgba(46,204,113,0.3); }
+.result .rejected h3 { color:rgba(255,255,255,0.5); }
+.result button {
+  margin-top:20px; padding:12px 36px; font-family:inherit; font-size:16px; color:#fff;
+  background:linear-gradient(135deg,#1b3a5c,#0d1b2a); border:none; border-radius:12px;
+  cursor:pointer; transition:transform .2s,box-shadow .2s; letter-spacing:1px;
+}
+.result button:hover { transform:translateY(-2px); box-shadow:0 4px 16px rgba(13,27,42,0.5); }
+</style>
+</head>
+<body>
+
+<div class="tabs">
+  <div class="tab active" onclick="switchTab('briefing')">📜 招聘宣讲</div>
+  <div class="tab" onclick="switchTab('select')">📋 浏览简历</div>
+  <div class="tab" onclick="switchTab('interview')">🎤 面试现场</div>
+</div>
+
+<!-- BRIEFING -->
+<div id="briefing" class="briefing active">
+  <div class="briefing-card">
+    <div class="icon">🎖️</div>
+    <h1>军训开始了！</h1>
+    <p class="sub">正是招干事的好时机</p>
+    <div class="divider"></div>
+    <p class="desc">作为新任部长，你需要组建自己的干事团队。<br>你将在10份简历中筛选合适的候选人，<br>通过面试选出最多5位加入你的部门。</p>
+    <p class="cost">消耗精力 20</p>
+    <button>开始招聘宣讲</button>
+  </div>
+</div>
+
+<!-- SELECT -->
+<div id="select" class="select">
+  <h2>📋 浏览简历</h2>
+  <p class="sub">已录用 0/5 人 · 点击候选人进入面试</p>
+
+  <div class="sec">
+    <div class="sec-title">📝 待面试</div>
+    <div class="grid" id="select-grid"></div>
+  </div>
+</div>
+
+<!-- INTERVIEW -->
+<div id="interview" class="interview">
+  <div class="interview-top">
+    <span class="title">🎤 面试现场</span>
+    <span class="info" id="iv-top-info">已录用 0/5 · 当前：刘海豹</span>
+  </div>
+  <div class="interview-main">
+    <div class="interview-left">
+      <div class="candidateArea" style="position:relative;text-align:center;">
+        <div class="avatar" id="iv-avatar" style="cursor:pointer;position:relative;transition:transform .2s,box-shadow .2s;" onclick="toggleTip()" title="点击查看详细数值">
+          <span id="iv-avatar-icon">👩</span>
+          <span style="position:absolute;bottom:-4px;right:-4px;width:26px;height:26px;border-radius:50%;background:#f0c040;color:#0d1b2a;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(240,192,64,0.4);">?</span>
+        </div>
+        <div id="iv-tipbox" style="display:none;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(13,27,42,0.96);backdrop-filter:blur(16px);border:1px solid rgba(240,192,64,0.4);border-radius:16px;padding:20px 24px;min-width:240px;z-index:10;box-shadow:0 8px 40px rgba(0,0,0,0.6);text-align:left;">
+          <button onclick="event.stopPropagation();document.getElementById('iv-tipbox').style.display='none'" style="position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(255,255,255,0.5);cursor:pointer;font-size:14px;font-family:inherit;">✕</button>
+          <div id="iv-tip-content"></div>
+        </div>
+      </div>
+      <div class="c-name" id="iv-name">刘海豹</div>
+      <div class="c-quality" id="iv-quality">⭐ 传奇</div>
+      <div class="c-energy" id="iv-energy">精力 ⚡150</div>
+      <button class="resume-btn" id="iv-resume-btn">📄 查看简历</button>
+    </div>
+    <div class="interview-right">
+      <div class="resume-card" id="iv-resume" style="display:none;">
+        <h3 id="iv-resume-title">📋 刘海豹 的简历</h3>
+        <div class="resume-grid">
+          <div class="resume-row"><span class="lbl">性别</span><span id="iv-r-gender">女</span></div>
+          <div class="resume-row"><span class="lbl">专业</span><span id="iv-r-major">人力资源管理</span></div>
+          <div class="resume-row"><span class="lbl">家乡</span><span id="iv-r-home">河北石家庄</span></div>
+          <div class="resume-row"><span class="lbl">爱好</span><span id="iv-r-hobby">模拟面试</span></div>
+          <div class="resume-row"><span class="lbl">特长</span><span id="iv-r-spec">人才测评 / 团队建设</span></div>
+          <div class="resume-row"><span class="lbl">座右铭</span><span class="motto" id="iv-r-motto">"慧眼识人，用心成事"</span></div>
+          <div class="resume-row"><span class="lbl">品质</span><span id="iv-r-quality" style="color:#b8860b;font-weight:600;">传奇</span></div>
+        </div>
+      </div>
+
+      <div class="q-section">
+        <h4>提问 (1/2)</h4>
+        <p class="hint">选择一个你想问的问题：</p>
+        <button class="q-btn"><span class="q-cat">[情景模拟]</span>如果学生会活动和你的课业冲突了，你会怎么处理？</button>
+        <button class="q-btn"><span class="q-cat">[动机考察]</span>你觉得学生会最吸引你的是什么？</button>
+        <button class="q-btn"><span class="q-cat">[自我认知]</span>你觉得自己最大的优点和缺点分别是什么？</button>
+      </div>
+
+      <div class="result">
+        <div class="hired">
+          <span class="icon">🎉</span>
+          <h3>欢迎加入我们！</h3>
+          <p class="sub" id="iv-result-sub">刘海豹 正式成为你的部门干事！</p>
+        </div>
+        <button>下一位 ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const APPLICANTS = [
+  { name:'刘海豹', gender:'female', quality:'legendary', energy:150, major:'人力资源管理', hometown:'河北石家庄', hobby:'模拟面试', specialty:'人才测评 / 团队建设', motto:'慧眼识人，用心成事', tip:'传奇品质 · 精力150\n入职加成：组织力+8 | 人脉+6\n特质：慧眼识人，录用后可额外获得一次面试机会', hired:true },
+  { name:'粥飞鱼', gender:'female', quality:'epic', energy:100, major:'电子商务', hometown:'湖北荆州', hobby:'直播带货', specialty:'电商运营 / 数据分析', motto:'每一件商品都有一个故事', tip:'史诗品质 · 精力100\n入职加成：预算+20 | 魅力值+3\n特质：南苑超市购物永久9折', hired:false },
+  { name:'肠锐悔', gender:'male', quality:'epic', energy:100, major:'物流管理', hometown:'山东临沂', hobby:'辩论', specialty:'PPT制作 / 活动策划', motto:'为了深耕物流管理，就是送快递我也愿意', tip:'史诗品质 · 精力100\n入职加成：组织力+5 | 人脉+4\n特质：活动策划时精力消耗减半' },
+  { name:'王明轩', gender:'male', quality:'rare', energy:78, major:'金融学', hometown:'上海', hobby:'篮球', specialty:'数据分析', motto:'脚踏实地，仰望星空', tip:'稀有品质 · 精力78\n入职加成：随机两项属性+2\n特质：精力充沛，能承担较多工作任务' },
+  { name:'陈怡萱', gender:'female', quality:'rare', energy:72, major:'心理学', hometown:'广州', hobby:'阅读', specialty:'文案撰写', motto:'让优秀成为一种习惯', tip:'稀有品质 · 精力72\n入职加成：随机两项属性+2\n特质：精力尚可，合理分配能胜任日常工作' },
+  { name:'张浩然', gender:'male', quality:'common', energy:55, major:'电子信息工程', hometown:'武汉', hobby:'电竞', specialty:'视频剪辑', motto:'行动胜于空谈', tip:'普通品质 · 精力55\n入职加成：随机一项属性+1\n特质：精力偏低，适合轻量级辅助工作' },
+  { name:'李雪婷', gender:'female', quality:'common', energy:62, major:'英语语言文学', hometown:'南京', hobby:'绘画', specialty:'海报设计', motto:'心之所向，素履以往', tip:'普通品质 · 精力62\n入职加成：随机一项属性+1\n特质：精力尚可，合理分配能胜任日常工作' },
+  { name:'赵伟强', gender:'male', quality:'common', energy:48, major:'机械工程', hometown:'西安', hobby:'骑行', specialty:'物资统筹', motto:'每天进步一点点', tip:'普通品质 · 精力48\n入职加成：随机一项属性+1\n特质：精力偏低，适合轻量级辅助工作' },
+  { name:'黄思洁', gender:'female', quality:'common', energy:85, major:'视觉传达设计', hometown:'成都', hobby:'摄影', specialty:'公众号运营', motto:'不负青春，不负韶华', tip:'普通品质 · 精力85\n入职加成：随机一项属性+1\n特质：精力充沛，能承担较多工作任务' },
+  { name:'刘逸恒', gender:'male', quality:'common', energy:41, major:'历史学', hometown:'长沙', hobby:'旅行', specialty:'活动主持', motto:'厚积薄发', tip:'普通品质 · 精力41\n入职加成：随机一项属性+1\n特质：精力偏低，适合轻量级辅助工作' },
+];
+
+function makeCard(a) {
+  const qc = {legendary:'传奇',epic:'史诗',rare:'稀有',common:'普通'}[a.quality];
+  const qcls = a.quality;
+  const extra = a.hired===true ? ' hired' : a.hired===false ? ' rejected' : '';
+  const genderIcon = a.gender==='female'?'♀':'♂';
+  const motto = a.motto || '';
+  return `<button class="card ${qcls}${extra}" style="${a.hired===true?'border-color:#27ae60;':''}" onclick="showInterview('${a.name}')">
+    <div class="card-header">
+      <span class="card-quality ${qcls}">${qc}</span>
+      <span class="card-energy">⚡${a.energy}</span>
+    </div>
+    <div class="card-name">${genderIcon} ${a.name}</div>
+    <div class="card-info"><span>${a.major}</span><span>${a.hometown}</span></div>
+    <div class="card-tags"><span class="card-tag">${a.hobby}</span><span class="card-tag">${a.specialty}</span></div>
+    ${motto ? '<div class="card-motto">"'+motto+'"</div>' : ''}
+    ${a.hired===true?'<div class="badge">已录用</div>':a.hired===false?'<div class="badge-reject">已拒绝</div>':''}
+  </button>`;
+}
+
+document.getElementById('select-grid').innerHTML = APPLICANTS.map(makeCard).join('');
+
+function showInterview(name) {
+  var a = APPLICANTS.find(function(x){return x.name===name;});
+  if (!a) return;
+  currentApplicant = a;
+  document.getElementById('iv-name').textContent = a.name;
+  document.getElementById('iv-avatar-icon').textContent = a.gender==='female'?'👩':'👨';
+  document.getElementById('iv-energy').textContent = '精力 ⚡'+a.energy;
+  var qlabels = {legendary:'⭐ 传奇',epic:'💎 史诗',rare:'🔷 稀有',common:'⚪ 普通'};
+  document.getElementById('iv-quality').textContent = qlabels[a.quality]||'';
+  document.getElementById('iv-resume-title').textContent = '📋 '+a.name+' 的简历';
+  document.getElementById('iv-r-gender').textContent = a.gender==='female'?'女':'男';
+  document.getElementById('iv-r-major').textContent = a.major;
+  document.getElementById('iv-r-home').textContent = a.hometown;
+  document.getElementById('iv-r-hobby').textContent = a.hobby;
+  document.getElementById('iv-r-spec').textContent = a.specialty;
+  document.getElementById('iv-r-motto').textContent = '"'+a.motto+'"';
+  document.getElementById('iv-r-quality').textContent = qlabels[a.quality]||'';
+  document.getElementById('iv-r-quality').style.color = {legendary:'#b8860b',epic:'#7c3aed',rare:'#2563eb',common:'#6b7280'}[a.quality]||'#6b7280';
+  document.getElementById('iv-tip-content').innerHTML = '<p style="font-size:14px;color:rgba(255,255,255,0.85);margin:0;line-height:1.8;white-space:pre-line;">'+a.tip+'</p>';
+  document.getElementById('iv-tipbox').style.display = 'none';
+  document.getElementById('iv-resume').style.display = 'none';
+  document.getElementById('iv-result-sub').textContent = a.name + ' 正式成为你的部门干事！';
+  document.getElementById('iv-top-info').textContent = '已录用 0/5 · 当前：'+a.name;
+  switchTab('interview');
+}
+
+function toggleTip() {
+  var tb = document.getElementById('iv-tipbox');
+  tb.style.display = tb.style.display === 'none' ? 'block' : 'none';
+}
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>{if(t.textContent.includes(tab==='briefing'?'宣讲':tab==='select'?'简历':'面试'))t.classList.add('active')});
+  document.getElementById('briefing').classList.toggle('active', tab==='briefing');
+  document.getElementById('select').classList.toggle('active', tab==='select');
+  document.getElementById('interview').classList.toggle('active', tab==='interview');
+}
+
+// resume button
+document.getElementById('iv-resume-btn').addEventListener('click', function(){
+  var r = document.getElementById('iv-resume');
+  r.style.display = r.style.display === 'none' ? 'block' : 'none';
+});
+</script>
+
+</body>
+</html>

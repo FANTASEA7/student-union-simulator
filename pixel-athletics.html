@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>像素田径场 - Pixel Athletics</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: #1a1a2e;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  font-family: 'Courier New', monospace;
+  overflow: hidden;
+}
+#wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+#hud {
+  display: flex;
+  gap: 24px;
+  color: #e0d8cf;
+  font-size: 14px;
+  font-weight: bold;
+  background: #16213e;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: 2px solid #0f3460;
+}
+.hud-item { display: flex; align-items: center; gap: 6px; }
+.hud-label { color: #888; font-size: 11px; }
+.hud-val { color: #ffd700; }
+canvas {
+  border: 3px solid #0f3460;
+  border-radius: 4px;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+#info {
+  color: #666;
+  font-size: 12px;
+  text-align: center;
+  max-width: 640px;
+  line-height: 1.6;
+}
+kbd {
+  background: #0f3460;
+  color: #ffd700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  font-family: 'Courier New', monospace;
+  font-size: 12px;
+}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div id="hud">
+    <div class="hud-item"><span class="hud-label">位置</span><span class="hud-val" id="pos">0,0</span></div>
+    <div class="hud-item"><span class="hud-label">速度</span><span class="hud-val" id="spd">0</span></div>
+    <div class="hud-item"><span class="hud-label">状态</span><span class="hud-val" id="sts">站立</span></div>
+    <div class="hud-item"><span class="hud-label">模式</span><span class="hud-val" id="mode">游玩</span></div>
+  </div>
+  <canvas id="c"></canvas>
+  <div id="info">
+    <kbd>W A S D</kbd> 移动 &nbsp; <kbd>空格</kbd> 跳跃跨栏 &nbsp; <kbd>E</kbd> 切换编辑模式 &nbsp; <kbd>1-5</kbd> 选画笔
+  </div>
+</div>
+
+<script>
+// ============ CONSTANTS ============
+const TILE = 4; // 4px tiles for ultra-micro pixel look
+const COLS = 200;
+const ROWS = 150;
+const W = COLS * TILE;
+const H = ROWS * TILE;
+
+const canvas = document.getElementById('c');
+canvas.width = W;
+canvas.height = H;
+const ctx = canvas.getContext('2d');
+ctx.imageSmoothingEnabled = false;
+
+// ============ TERRAIN TYPES ============
+const GRASS = 0, TRACK = 1, SAND = 2, WATER = 3, STAND = 4, WALL = 5, LINE = 6, HURDLE = 7;
+
+const terrainColors = {
+  [GRASS]: ['#2d8c3c','#33993d','#2a8035','#35a040','#2d8c3c','#267030'],
+  [TRACK]: ['#c44b3c','#b84035','#d05040','#c94a3b','#b84035','#c44b3c'],
+  [SAND]:   ['#d4b896','#ddc4a0','#d0b48e','#d8bc98','#d4b896','#ccac88'],
+  [WATER]:  ['#3388cc','#3a90d4','#3080c0','#3590d0','#3388cc','#2c78b8'],
+  [STAND]:  ['#8899aa','#9098a8','#8899aa','#8a8a8a','#9098a8','#8899aa'],
+  [WALL]:   ['#554433','#5a4838','#554433','#503e30','#5a4838','#554433'],
+  [LINE]:   ['#ffffff','#f8f8f8','#ffffff','#f0f0f0','#ffffff','#f8f8f8'],
+  [HURDLE]: ['#dddddd','#e8e8e8','#dddddd','#d0d0d0','#e8e8e8','#dddddd'],
+};
+
+// ============ MAP DATA ============
+const map = new Uint8Array(COLS * ROWS);
+const objects = new Uint8Array(COLS * ROWS); // 0=none, 1=tree, 2=hurdle, 3=barrier, 4=flag
+
+// Helper: set terrain in a rectangle
+function rect(c0, r0, c1, r1, type) {
+  for (let r = r0; r <= r1; r++)
+    for (let c = c0; c <= c1; c++)
+      map[r * COLS + c] = type;
+}
+
+// Helper: set terrain in an ellipse
+function ellipse(cx, cy, rx, ry, type) {
+  for (let r = cy - ry; r <= cy + ry; r++) {
+    for (let c = cx - rx; c <= cx + rx; c++) {
+      const dx = (c - cx) / rx, dy = (r - cy) / ry;
+      if (dx * dx + dy * dy <= 1 && r >= 0 && r < ROWS && c >= 0 && c < COLS)
+        map[r * COLS + c] = type;
+    }
+  }
+}
+
+// Helper: ring (for track)
+function ring(cx, cy, innerRx, innerRy, outerRx, outerRy, type) {
+  for (let r = cy - outerRy; r <= cy + outerRy; r++) {
+    for (let c = cx - outerRx; c <= cx + outerRx; c++) {
+      if (r < 0 || r >= ROWS || c < 0 || c >= COLS) continue;
+      const dx = (c - cx) / outerRx, dy = (r - cy) / outerRy;
+      const outer = dx * dx + dy * dy <= 1;
+      const dx2 = (c - cx) / innerRx, dy2 = (r - cy) / innerRy;
+      const inner = dx2 * dx2 + dy2 * dy2 <= 1;
+      if (outer && !inner) map[r * COLS + c] = type;
+    }
+  }
+}
+
+// ============ BUILD STADIUM ============
+function buildMap() {
+  const CX = 100, CY = 85;
+  const outerRx = 52, outerRy = 38;
+  const innerRx = 30, innerRy = 20;
+
+  // Background: grass everywhere
+  rect(0, 0, COLS-1, ROWS-1, GRASS);
+
+  // Grandstand (top section, rows 0-24)
+  rect(0, 0, COLS-1, 18, STAND);
+
+  // Stand seats texture (alternating rows)
+  for (let r = 0; r <= 18; r++) {
+    if (r % 3 < 2) {
+      for (let c = 0; c < COLS; c++) {
+        if ((c + (r % 3)) % 12 < 3) map[r * COLS + c] = STAND;
+        else if (r % 3 === 0) map[r * COLS + c] = 4; // lighter
+      }
+    }
+  }
+
+  // Outer grass ring
+  ellipse(CX, CY, outerRx + 6, outerRy + 6, GRASS);
+
+  // Running track (red rubber oval ring)
+  ring(CX, CY, innerRx - 1, innerRy - 1, outerRx, outerRy, TRACK);
+
+  // Lane lines (4 lanes)
+  for (let lane = 1; lane <= 3; lane++) {
+    const lrx = innerRx + (outerRx - innerRx) * lane / 4;
+    const lry = innerRy + (outerRy - innerRy) * lane / 4;
+    ring(CX, CY, lrx, lry, lrx + 0.5, lry + 0.5, LINE);
+  }
+
+  // Inner grass field
+  ellipse(CX, CY, innerRx - 2, innerRy - 2, GRASS);
+
+  // Sandpit (inside inner field, bottom area)
+  ellipse(CX - 8, CY + 10, 8, 4, SAND);
+
+  // Water pit (inside inner field, top area)
+  ellipse(CX + 10, CY - 8, 5, 3, WATER);
+
+  // Starting line (vertical, at bottom straight)
+  for (let r = CY + 25; r <= CY + 42; r++) {
+    for (let c = 97; c <= 103; c++) {
+      if (map[r * COLS + c] === TRACK) {
+        // Check if in a lane
+        const dr = r - CY, dc = c - CX;
+        const dist = Math.sqrt((dc * dc) / (40 * 40) + (dr * dr) / (28 * 28));
+        if (dist > 0.58 && dist < 0.95 && dc > -20 && dc < 20) {
+          map[r * COLS + c] = LINE;
+        }
+      }
+    }
+  }
+
+  // Lane number markers near start line
+  const laneNums = ['1','2','3','4'];
+  for (let l = 0; l < 4; l++) {
+    const lx = CX - 15 + l * 10;
+    for (let dy = 0; dy < 4; dy++) {
+      map[(CY + 47 + dy) * COLS + (lx)] = LINE;
+    }
+  }
+
+  // Place obstacles
+  placeTrees();
+  placeHurdles();
+  placeBarriers();
+  placeFlags();
+}
+
+function placeTrees() {
+  const trees = [
+    [30,60],[35,65],[165,55],[170,62],[25,100],[172,95],
+    [40,110],[160,115],[50,120],[150,125],
+    [20,40],[180,42],[55,35],[145,38],
+    [60,130],[140,132],[70,28],[130,30],
+  ];
+  for (const [c, r] of trees) {
+    if (r >= 0 && r < ROWS && c >= 0 && c < COLS) {
+      objects[r * COLS + c] = 1; // tree
+      // Tree trunk shadow (3x3 area blocked)
+      for (let dr = -2; dr <= 2; dr++) {
+        for (let dc = -2; dc <= 2; dc++) {
+          const rr = r + dr, cc = c + dc;
+          if (rr >= 0 && rr < ROWS && cc >= 0 && cc < COLS && !objects[rr * COLS + cc])
+            map[rr * COLS + cc] = GRASS; // ensure grass under tree
+        }
+      }
+    }
+  }
+}
+
+function placeHurdles() {
+  // Hurdles on the track - bottom straight and top straight
+  const CX = 100, CY = 85;
+  for (let l = 0; l < 6; l++) {
+    const col = CX - 18 + l * 7;
+    // Bottom straight hurdles
+    for (let r = CY + 30; r <= CY + 38; r += 2) {
+      if (map[r * COLS + col] === TRACK) objects[r * COLS + col] = 2;
+    }
+    // Top straight hurdles
+    for (let r = CY - 30; r >= CY - 38; r -= 2) {
+      if (map[r * COLS + col] === TRACK) objects[r * COLS + col] = 2;
+    }
+  }
+}
+
+function placeBarriers() {
+  // Fence around outer edge of field
+  for (let c = 5; c < COLS - 5; c++) {
+    if (map[20 * COLS + c] === GRASS) objects[20 * COLS + c] = 3;
+  }
+  // Ad boards near top stand
+  for (let c = 20; c < COLS - 20; c += 15) {
+    objects[21 * COLS + c] = 3;
+  }
+}
+
+function placeFlags() {
+  const CX = 100, CY = 85;
+  // Flag poles around the track
+  const flags = [
+    [CX-50, CY-35], [CX+50, CY-35], [CX-50, CY+35], [CX+50, CY+35],
+    [CX-55, CY], [CX+55, CY], [CX, CY-38],
+  ];
+  for (const [c, r] of flags) {
+    if (r >= 0 && r < ROWS && c >= 0 && c < COLS)
+      objects[r * COLS + c] = 4;
+  }
+}
+
+// ============ NPC DATA ============
+const npcs = [];
+function spawnNPCs() {
+  npcs.length = 0;
+  const CX = 100, CY = 85;
+
+  // Competitor athletes (on track lanes)
+  for (let i = 0; i < 4; i++) {
+    npcs.push({
+      type: 'athlete',
+      x: (CX - 10 + i * 7) * TILE,
+      y: (CY + 34) * TILE,
+      lane: i,
+      speed: 0.3 + Math.random() * 0.6,
+      color: ['#ff4444','#44aaff','#ffaa00','#44ff44'][i],
+      progress: 0, // radians around the track
+      name: `选手${i+1}`,
+    });
+  }
+
+  // Referees
+  npcs.push({
+    type: 'referee', x: (CX - 5) * TILE, y: (CY + 42) * TILE,
+    action: 0, actionTimer: 0, name: '裁判A',
+  });
+  npcs.push({
+    type: 'referee', x: (CX + 6) * TILE, y: (CY - 6) * TILE,
+    action: 0, actionTimer: 30, name: '裁判B',
+  });
+
+  // Spectators in stands (row 0-16)
+  for (let i = 0; i < 40; i++) {
+    const col = 10 + (i % 35) * 5 + Math.random() * 3;
+    const row = 2 + Math.floor(i / 35) * 5 + Math.random() * 4;
+    npcs.push({
+      type: 'spectator',
+      x: col * TILE,
+      y: row * TILE,
+      color: ['#ff6b6b','#6bc5ff','#ffe66b','#6bff6b','#ff6bff','#ffb347'][i % 6],
+      bobPhase: Math.random() * Math.PI * 2,
+      name: '',
+    });
+  }
+}
+
+// ============ PLAYER STATE ============
+const player = {
+  x: 0, y: 0, // pixel position
+  vx: 0, vy: 0,
+  speed: 0,
+  facing: 0, // 0=down,1=left,2=right,3=up
+  jumping: false,
+  jumpVel: 0,
+  jumpY: 0,
+  stumbled: false,
+  stumbleTimer: 0,
+  animFrame: 0,
+  animTimer: 0,
+};
+
+// Start position on track bottom straight
+const initPX = 100 * TILE, initPY = 128 * TILE;
+
+function resetPlayer() {
+  player.x = initPX;
+  player.y = initPY;
+  player.vx = 0;
+  player.vy = 0;
+  player.speed = 0;
+  player.facing = 0;
+  player.jumping = false;
+  player.jumpVel = 0;
+  player.jumpY = 0;
+  player.stumbled = false;
+  player.stumbleTimer = 0;
+}
+
+resetPlayer();
+
+// ============ INPUT ============
+const keys = {};
+window.addEventListener('keydown', e => {
+  keys[e.key.toLowerCase()] = true;
+  if (e.key === ' ' || e.key === 'Spacebar') {
+    e.preventDefault();
+    if (!player.jumping && !player.stumbled) {
+      player.jumping = true;
+      player.jumpVel = 4.5;
+      player.jumpY = 0;
+    }
+  }
+});
+window.addEventListener('keyup', e => {
+  keys[e.key.toLowerCase()] = false;
+});
+
+// ============ EDIT MODE ============
+let editMode = false;
+let editBrush = 3; // barrier by default
+
+window.addEventListener('keydown', e => {
+  if (e.key === 'e' || e.key === 'E') {
+    editMode = !editMode;
+    document.getElementById('mode').textContent = editMode ? '编辑' : '游玩';
+  }
+  if (e.key >= '1' && e.key <= '5') {
+    editBrush = parseInt(e.key);
+  }
+});
+
+canvas.addEventListener('click', e => {
+  if (!editMode) return;
+  const rect = canvas.getBoundingClientRect();
+  const mx = Math.floor((e.clientX - rect.left) / TILE);
+  const my = Math.floor((e.clientY - rect.top) / TILE);
+  if (mx >= 0 && mx < COLS && my >= 0 && my < ROWS) {
+    const brushes = { 1: GRASS, 2: TRACK, 3: 3, 4: 2, 5: 0 };
+    const val = brushes[editBrush] || 0;
+    if (val >= GRASS && val <= LINE) {
+      map[my * COLS + mx] = val;
+    } else if (val === 0) {
+      objects[my * COLS + mx] = 0;
+    } else {
+      objects[my * COLS + mx] = val;
+    }
+  }
+});
+
+// ============ GAME LOOP ============
+function isBlocked(px, py) {
+  const cx = Math.floor(px / TILE);
+  const cy = Math.floor(py / TILE);
+  if (cx < 0 || cx >= COLS || cy < 0 || cy >= ROWS) return true;
+  const obj = objects[cy * COLS + cx];
+  if (obj === 1 || obj === 3) return true; // trees & barriers block
+  if (obj === 2) {
+    // Hurdle: blocked only if not jumping
+    if (!player.jumping || player.jumpY < 8) return true;
+  }
+  const terrain = map[cy * COLS + cx];
+  if (terrain === STAND || terrain === WALL) return true;
+  return false;
+}
+
+function getTerrain(px, py) {
+  const cx = Math.floor(px / TILE);
+  const cy = Math.floor(py / TILE);
+  if (cx < 0 || cx >= COLS || cy < 0 || cy >= ROWS) return GRASS;
+  return map[cy * COLS + cx];
+}
+
+function update(dt) {
+  if (editMode) return;
+
+  // Stumble recovery
+  if (player.stumbled) {
+    player.stumbleTimer -= dt;
+    if (player.stumbleTimer <= 0) {
+      player.stumbled = false;
+    }
+    document.getElementById('sts').textContent = '绊倒!';
+    player.speed *= 0.9;
+    if (player.speed < 0.1) player.speed = 0;
+    return;
+  }
+
+  const maxSpeed = 3.5;
+  const accel = 0.2;
+  const friction = 0.12;
+
+  // Determine terrain speed modifier
+  const t = getTerrain(player.x, player.y);
+  let speedMod = 1;
+  if (t === TRACK) speedMod = 1.2;
+  else if (t === SAND) speedMod = 0.5;
+  else if (t === WATER) speedMod = 0.35;
+
+  let inputX = 0, inputY = 0;
+  if (keys['w'] || keys['arrowup']) inputY = -1;
+  if (keys['s'] || keys['arrowdown']) inputY = 1;
+  if (keys['a'] || keys['arrowleft']) inputX = -1;
+  if (keys['d'] || keys['arrowright']) inputX = 1;
+
+  const inputMag = Math.sqrt(inputX * inputX + inputY * inputY);
+  if (inputMag > 0) {
+    inputX /= inputMag;
+    inputY /= inputMag;
+    player.vx += inputX * accel;
+    player.vy += inputY * accel;
+    // Update facing
+    if (Math.abs(inputX) > Math.abs(inputY)) player.facing = inputX > 0 ? 2 : 1;
+    else player.facing = inputY > 0 ? 0 : 3;
+  }
+
+  // Speed limit
+  const spd = Math.sqrt(player.vx * player.vx + player.vy * player.vy);
+  if (spd > maxSpeed * speedMod) {
+    player.vx = player.vx / spd * maxSpeed * speedMod;
+    player.vy = player.vy / spd * maxSpeed * speedMod;
+  }
+  if (inputMag === 0) {
+    player.vx *= (1 - friction);
+    player.vy *= (1 - friction);
+    if (Math.abs(player.vx) < 0.05) player.vx = 0;
+    if (Math.abs(player.vy) < 0.05) player.vy = 0;
+  }
+  player.speed = Math.sqrt(player.vx * player.vx + player.vy * player.vy);
+
+  // Try move X then Y
+  const nx = player.x + player.vx;
+  if (!isBlocked(nx, player.y - 2) && !isBlocked(nx, player.y + 2)) {
+    player.x = nx;
+  } else {
+    player.vx *= -0.3;
+  }
+  const ny = player.y + player.vy;
+  if (!isBlocked(player.x - 2, ny) && !isBlocked(player.x + 2, ny)) {
+    player.y = ny;
+  } else {
+    player.vy *= -0.3;
+  }
+
+  // Hurdle stumble check
+  const cx = Math.floor(player.x / TILE);
+  const cy = Math.floor(player.y / TILE);
+  if (objects[cy * COLS + cx] === 2 && !player.jumping) {
+    player.stumbled = true;
+    player.stumbleTimer = 45;
+    player.speed *= 0.15;
+    player.vx *= 0.15;
+    player.vy *= 0.15;
+  }
+
+  // Clamp
+  player.x = Math.max(0, Math.min(W - 1, player.x));
+  player.y = Math.max(0, Math.min(H - 1, player.y));
+
+  // Jump physics
+  if (player.jumping) {
+    player.jumpY += player.jumpVel;
+    player.jumpVel -= 0.35;
+    if (player.jumpY <= 0) {
+      player.jumping = false;
+      player.jumpY = 0;
+      player.jumpVel = 0;
+    }
+  }
+
+  // Animation
+  if (player.speed > 0.3) {
+    player.animTimer += dt;
+    if (player.animTimer > 8) { player.animTimer = 0; player.animFrame = (player.animFrame + 1) % 4; }
+  }
+
+  // Update NPCs
+  updateNPCs();
+
+  // HUD
+  document.getElementById('pos').textContent = `${Math.floor(player.x/TILE)},${Math.floor(player.y/TILE)}`;
+  document.getElementById('spd').textContent = Math.floor(player.speed * 30);
+  const t2 = getTerrain(player.x, player.y);
+  const tNames = { [GRASS]:'草地', [TRACK]:'跑道', [SAND]:'沙坑', [WATER]:'水池', [STAND]:'看台' };
+  document.getElementById('sts').textContent = player.jumping ? '起跳!' : player.stumbled ? '绊倒!' : (tNames[t2]||'场地');
+}
+
+function updateNPCs() {
+  const time = performance.now() / 1000;
+  const CX = 100 * TILE, CY = 85 * TILE;
+  const rx = 46 * TILE, ry = 32 * TILE;
+
+  for (const npc of npcs) {
+    if (npc.type === 'athlete') {
+      npc.progress += npc.speed * 0.008;
+      const angle = npc.progress;
+      npc.x = CX + Math.cos(angle) * rx;
+      npc.y = CY - Math.sin(angle) * ry;
+    } else if (npc.type === 'referee') {
+      npc.actionTimer++;
+      if (npc.actionTimer > 60) { npc.actionTimer = 0; npc.action = (npc.action + 1) % 3; }
+    } else if (npc.type === 'spectator') {
+      npc.bobPhase += 0.08;
+    }
+  }
+}
+
+// ============ RENDER ============
+function drawPixel(x, y, color) {
+  ctx.fillStyle = color;
+  ctx.fillRect(Math.floor(x), Math.floor(y), 1, 1);
+}
+
+function drawSprite(cx, cy, data, scale) {
+  for (let r = 0; r < data.length; r++) {
+    for (let c = 0; c < data[r].length; c++) {
+      const color = data[r][c];
+      if (color !== null) {
+        ctx.fillStyle = color;
+        ctx.fillRect(cx + c * scale, cy + r * scale, scale, scale);
+      }
+    }
+  }
+}
+
+// Player sprite (8x12 micro pixel art)
+const playerSprites = {
+  // Facing down
+  0: [
+    [null,null,'#444','#ffe0bd','#ffe0bd','#444',null,null],
+    [null,'#444','#855','#ffe0bd','#ffe0bd','#855','#444',null],
+    ['#444','#855','#ffe0bd','#ffe0bd','#ffe0bd','#ffe0bd','#855','#444'],
+    ['#444','#44aaff','#3399dd','#44aaff','#44aaff','#3399dd','#44aaff','#444'],
+    ['#444','#44aaff','#44aaff','#44aaff','#44aaff','#44aaff','#44aaff','#444'],
+    [null,'#444','#333','#333','#333','#333','#444',null],
+    [null,'#444','#ffe0bd','#ffe0bd','#ffe0bd','#ffe0bd','#444',null],
+    [null,'#444','#ffe0bd','null','null','#ffe0bd','#444',null],
+    [null,null,'#444','#ffe0bd','#ffe0bd','#444',null,null],
+    [null,null,'#333','#333','#333','#333',null,null],
+    [null,'#444','#333','#333','#333','#333','#444',null],
+    [null,'#444','#d44','#d44','#d44','#d44','#444',null],
+  ],
+};
+
+function drawPlayer() {
+  const sx = player.x - 4 * TILE / 2;
+  const sy = player.y - 12 * TILE / 2 - player.jumpY;
+  const sprite = playerSprites[0];
+  if (!sprite) return;
+
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,0.3)';
+  ctx.fillEllipse ?
+    ctx.fillEllipse(player.x, player.y + 2, 6, 2) :
+    ctx.fillRect(player.x - 6, player.y + 1, 12, 3);
+
+  for (let r = 0; r < sprite.length; r++) {
+    for (let c = 0; c < sprite[r].length; c++) {
+      const color = sprite[r][c];
+      if (color !== null) {
+        ctx.fillStyle = player.stumbled ? '#ff4444' : color;
+        ctx.fillRect(sx + c * TILE, sy + r * TILE, TILE, TILE);
+      }
+    }
+  }
+}
+
+function drawNPCs() {
+  for (const npc of npcs) {
+    const sx = Math.floor(npc.x - 3 * TILE / 2);
+    const sy = Math.floor(npc.y - 6 * TILE + (npc.type === 'spectator' ? Math.sin(npc.bobPhase) * 2 : 0));
+
+    if (npc.type === 'athlete') {
+      // Small athlete sprite
+      ctx.fillStyle = npc.color;
+      ctx.fillRect(sx, sy, 3 * TILE, 5 * TILE); // body
+      ctx.fillStyle = '#ffe0bd';
+      ctx.fillRect(sx + TILE, sy - 2 * TILE, TILE, 2 * TILE); // head
+    } else if (npc.type === 'referee') {
+      ctx.fillStyle = '#222';
+      ctx.fillRect(sx, sy, 3 * TILE, 5 * TILE);
+      ctx.fillStyle = '#ffe0bd';
+      ctx.fillRect(sx + TILE, sy - 2 * TILE, TILE, 2 * TILE);
+      // Flag
+      if (npc.action === 1) {
+        ctx.fillStyle = '#ff4444';
+        ctx.fillRect(sx + 3 * TILE, sy - 1 * TILE, 3 * TILE, 2 * TILE);
+      }
+    } else if (npc.type === 'spectator') {
+      // Tiny spectator in seat
+      ctx.fillStyle = npc.color;
+      ctx.fillRect(sx, sy, 3 * TILE, 3 * TILE);
+      ctx.fillStyle = '#ffe0bd';
+      ctx.fillRect(sx + TILE, sy - TILE, TILE, TILE);
+    }
+  }
+}
+
+function drawObjects() {
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const obj = objects[r * COLS + c];
+      const px = c * TILE, py = r * TILE;
+
+      if (obj === 1) {
+        // Tree
+        ctx.fillStyle = '#5a3a1a';
+        ctx.fillRect(px + TILE, py + 2 * TILE, 2 * TILE, 3 * TILE);
+        ctx.fillStyle = '#338833';
+        ctx.fillRect(px - 2 * TILE, py - 2 * TILE, 8 * TILE, 5 * TILE);
+        ctx.fillStyle = '#44aa44';
+        ctx.fillRect(px - 1 * TILE, py - 1 * TILE, 6 * TILE, 3 * TILE);
+        ctx.fillStyle = '#55cc55';
+        ctx.fillRect(px, py - 3 * TILE, 4 * TILE, 3 * TILE);
+      } else if (obj === 2) {
+        // Hurdle
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(px, py - TILE, 4 * TILE, TILE);
+        ctx.fillRect(px, py + 2 * TILE, TILE, TILE);
+        ctx.fillRect(px + 3 * TILE, py + 2 * TILE, TILE, TILE);
+      } else if (obj === 3) {
+        // Barrier / fence
+        ctx.fillStyle = '#8b7355';
+        ctx.fillRect(px, py, 4 * TILE, 3 * TILE);
+        ctx.fillStyle = '#a08868';
+        ctx.fillRect(px + TILE, py, 2 * TILE, TILE);
+      } else if (obj === 4) {
+        // Flag pole
+        ctx.fillStyle = '#aaaaaa';
+        ctx.fillRect(px + TILE, py - 5 * TILE, TILE, 7 * TILE);
+        ctx.fillStyle = '#ff4444';
+        const waveX = Math.sin(performance.now() / 500 + c) * TILE;
+        ctx.fillRect(px + 2 * TILE + waveX, py - 5 * TILE, 3 * TILE, 2 * TILE);
+      }
+    }
+  }
+}
+
+function drawStumbleEffect() {
+  if (player.stumbled) {
+    const alpha = Math.sin(player.stumbleTimer * 0.3) * 0.25;
+    ctx.fillStyle = `rgba(255,0,0,${Math.abs(alpha)})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+}
+
+function drawMiniMap() {
+  const mmW = 80, mmH = 60;
+  const mx = W - mmW - 8, my = 8;
+  ctx.fillStyle = 'rgba(0,0,0,0.7)';
+  ctx.fillRect(mx - 1, my - 1, mmW + 2, mmH + 2);
+  for (let r = 0; r < ROWS; r += 3) {
+    for (let c = 0; c < COLS; c += 3) {
+      const t = map[Math.floor(r / 3) * 3 * COLS + Math.floor(c / 3) * 3];
+      const dx = mx + (c / COLS) * mmW;
+      const dy = my + (r / ROWS) * mmH;
+      ctx.fillStyle = terrainColors[t]?.[0] || '#333';
+      ctx.fillRect(dx, dy, 1, 1);
+    }
+  }
+  // Player dot
+  const pdx = mx + (player.x / W) * mmW;
+  const pdy = my + (player.y / H) * mmH;
+  ctx.fillStyle = '#ffff00';
+  ctx.fillRect(pdx - 1, pdy - 1, 3, 3);
+}
+
+function render() {
+  ctx.clearRect(0, 0, W, H);
+
+  // Draw terrain
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      const t = map[r * COLS + c];
+      const colors = terrainColors[t];
+      if (colors) {
+        // Subtle noise pattern
+        const idx = (r * 7 + c * 13 + Math.floor(r / 3) * 5) % colors.length;
+        ctx.fillStyle = colors[idx];
+        ctx.fillRect(c * TILE, r * TILE, TILE, TILE);
+      }
+    }
+  }
+
+  // Grass detail dots (flowers)
+  for (let i = 0; i < 300; i++) {
+    const seed = i * 7919;
+    const r = (seed % ROWS);
+    const c = Math.floor(seed / ROWS) % COLS;
+    if (map[r * COLS + c] === GRASS && r > 22) {
+      const gSeed = (r * COLS + c) * 17;
+      if (gSeed % 47 === 0) {
+        ctx.fillStyle = '#ffff88';
+        ctx.fillRect(c * TILE, r * TILE, TILE / 2, TILE / 2);
+      } else if (gSeed % 53 === 0) {
+        ctx.fillStyle = '#ff8888';
+        ctx.fillRect(c * TILE + TILE / 2, r * TILE, TILE / 2, TILE / 2);
+      }
+    }
+  }
+
+  // Track texture
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (map[r * COLS + c] === TRACK && (r + c) % 8 === 0) {
+        ctx.fillStyle = 'rgba(0,0,0,0.1)';
+        ctx.fillRect(c * TILE, r * TILE, TILE, TILE / 2);
+      }
+    }
+  }
+
+  // Water animation
+  const t = performance.now() / 1000;
+  for (let r = 0; r < ROWS; r++) {
+    for (let c = 0; c < COLS; c++) {
+      if (map[r * COLS + c] === WATER && (r + c + Math.floor(t * 3)) % 4 === 0) {
+        ctx.fillStyle = 'rgba(255,255,255,0.3)';
+        ctx.fillRect(c * TILE, r * TILE, TILE, TILE / 2);
+      }
+    }
+  }
+
+  drawObjects();
+  drawNPCs();
+  drawPlayer();
+  drawStumbleEffect();
+  drawMiniMap();
+
+  // Edit mode overlay
+  if (editMode) {
+    ctx.strokeStyle = '#ffd700';
+    ctx.lineWidth = 1;
+    ctx.strokeRect(0, 0, W, H);
+    ctx.fillStyle = 'rgba(255,215,0,0.1)';
+    ctx.fillRect(0, 0, W, H);
+    ctx.fillStyle = '#ffd700';
+    ctx.font = '16px monospace';
+    ctx.fillText('编辑模式 — 点击地图放置/清除', 10, H - 10);
+  }
+}
+
+// ============ INIT ============
+buildMap();
+spawnNPCs();
+
+let lastTime = performance.now();
+function gameLoop(time) {
+  const dt = Math.min(30, time - lastTime);
+  lastTime = time;
+  update(dt);
+  render();
+  requestAnimationFrame(gameLoop);
+}
+requestAnimationFrame(gameLoop);
+</script>
+</body>
+</html>

@@ -1,0 +1,339 @@
+.gameContainer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1a1a2e;
+  color: #fff;
+}
+
+.hud {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 12px;
+  font-size: 16px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.playArea {
+  flex: 1;
+  position: relative;
+  cursor: crosshair;
+}
+
+.target {
+  position: absolute;
+  width: 60px;
+  height: 60px;
+  background: #e74c3c;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  box-shadow: 0 0 20px rgba(231, 76, 60, 0.5);
+  transition: all 0.3s;
+}
+
+.target:hover {
+  transform: translate(-50%, -50%) scale(1.2);
+}
+
+.memoryGrid {
+  display: grid;
+  gap: 10px;
+  padding: 40px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.memoryCard {
+  aspect-ratio: 1;
+  background: #2c3e50;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.memoryCard.flipped {
+  background: #fff;
+  color: #333;
+}
+
+.assignArea {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.taskCard {
+  background: #fff;
+  color: #333;
+  padding: 20px 32px;
+  border-radius: 12px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.assignFeedback {
+  font-size: 14px;
+  color: #f0c040;
+  animation: fadeIn 0.3s;
+}
+
+.zoneGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.zoneBtn {
+  padding: 16px 32px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.zoneBtn:hover { background: rgba(255, 255, 255, 0.15); }
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===== 打地鼠 (WhackGame) ===== */
+.whackBoard {
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 30px;
+  max-width: 360px;
+  margin: 0 auto;
+  align-content: center;
+  cursor: crosshair;
+}
+
+.whackHole {
+  aspect-ratio: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.holeBg {
+  font-size: 48px;
+  opacity: 0.3;
+}
+
+.mole {
+  position: absolute;
+  font-size: 44px;
+  cursor: pointer;
+  animation: molePop 0.2s ease-out;
+  user-select: none;
+}
+
+.mole:hover {
+  transform: scale(1.2);
+}
+
+@keyframes molePop {
+  from { transform: scale(0) translateY(10px); }
+  to { transform: scale(1) translateY(0); }
+}
+
+/* ===== 接星星 (CatchGame) ===== */
+.catchBoard {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0a0a2e 0%, #1a1a4e 50%, #2a2a5e 100%);
+  cursor: none;
+}
+
+.fallingItem {
+  position: absolute;
+  top: -40px;
+  font-size: 32px;
+  animation: fall linear forwards;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.starItem {
+  filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
+}
+
+.bombItem {
+  filter: drop-shadow(0 0 8px rgba(255, 0, 0, 0.6));
+}
+
+@keyframes fall {
+  from { top: -40px; }
+  to { top: 110%; }
+}
+
+.basket {
+  position: absolute;
+  bottom: 30px;
+  transform: translateX(-50%);
+  z-index: 5;
+  transition: left 0.05s linear;
+  pointer-events: none;
+}
+
+.basketEmoji {
+  font-size: 48px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
+}
+
+.catchZone {
+  position: absolute;
+  bottom: 20px;
+  height: 100px;
+  z-index: 10;
+  transition: left 0.05s linear;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.catchIndicator {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 70px;
+  background: rgba(255, 215, 0, 0.15);
+  border: 2px dashed rgba(255, 215, 0, 0.4);
+  border-radius: 8px;
+  animation: catchPulse 0.5s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes catchPulse {
+  from { background: rgba(255, 215, 0, 0.1); border-color: rgba(255, 215, 0, 0.3); }
+  to { background: rgba(255, 215, 0, 0.25); border-color: rgba(255, 215, 0, 0.6); }
+}
+
+.catchHint {
+  text-align: center;
+  padding: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.35);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ===== NPC 邀约小游戏弹窗 ===== */
+.inviteOverlay {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a2e;
+}
+
+.inviteCard {
+  background: linear-gradient(135deg, #2c3e50, #34495e);
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  padding: 32px 40px;
+  text-align: center;
+  max-width: 420px;
+  animation: inviteFadeIn 0.4s ease-out;
+}
+
+@keyframes inviteFadeIn {
+  from { opacity: 0; transform: translateY(-16px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.inviteAvatar {
+  font-size: 64px;
+  margin-bottom: 12px;
+  animation: inviteBounce 1s infinite;
+}
+
+@keyframes inviteBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+.inviteTitle {
+  font-size: 20px;
+  font-weight: 700;
+  color: #f0c040;
+  margin-bottom: 8px;
+}
+
+.inviteText {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.85);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.invitePreview {
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.5);
+  margin-bottom: 24px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+}
+
+.inviteButtons {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  margin-bottom: 12px;
+}
+
+.inviteAcceptBtn {
+  padding: 12px 28px;
+  background: #27ae60;
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.inviteAcceptBtn:hover {
+  background: #219a52;
+  transform: scale(1.05);
+}
+
+.inviteDeclineBtn {
+  padding: 12px 28px;
+  background: rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.inviteDeclineBtn:hover {
+  background: rgba(255, 255, 255, 0.15);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.inviteDeclineHint {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.35);
+}

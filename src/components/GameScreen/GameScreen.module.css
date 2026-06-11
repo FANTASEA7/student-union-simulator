@@ -1,0 +1,238 @@
+/* ═══ GameScreen 布局 — AAA 游戏 UI ═══ */
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-warm);
+  position: relative;
+  z-index: 1;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.eventArea {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: auto;
+}
+
+/* 微妙的尘埃粒子在中心区域 */
+.eventArea::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(1px 1px at 20% 30%, rgba(180,150,120,0.3), transparent),
+    radial-gradient(1px 1px at 40% 70%, rgba(180,150,120,0.2), transparent),
+    radial-gradient(1.5px 1.5px at 60% 20%, rgba(200,170,140,0.25), transparent),
+    radial-gradient(1px 1px at 80% 50%, rgba(180,150,120,0.2), transparent),
+    radial-gradient(1.5px 1.5px at 10% 80%, rgba(200,170,140,0.25), transparent);
+}
+
+.crisisBg {
+  background: radial-gradient(ellipse at center, rgba(40,45,60,0.3) 0%, rgba(10,12,18,0.95) 100%);
+}
+
+/* ═══ 深色毛玻璃侧边栏 ═══ */
+.sidebar {
+  width: 260px;
+  min-width: 260px;
+  display: flex;
+  flex-direction: column;
+  background: rgba(13,27,42,0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-left: 1px solid rgba(255,255,255,0.08);
+  box-shadow: -4px 0 24px rgba(0,0,0,0.3);
+  overflow-y: auto;
+  position: relative;
+  z-index: 2;
+}
+
+/* 侧边栏顶部微妙高光 */
+.sidebar::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.06), transparent);
+  pointer-events: none;
+}
+
+/* ═══ 无事件提示 ═══ */
+.noEvent {
+  font-size: var(--text-md);
+  color: var(--cream-500);
+  font-family: var(--font-game);
+  letter-spacing: 0.04em;
+}
+
+/* ═══ 快捷操作 ═══ */
+.quickActions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.quickBtn {
+  padding: 7px 6px;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.04);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+  font-family: var(--font-ui);
+}
+
+.quickBtn:hover {
+  background: rgba(255,255,255,0.1);
+  border-color: rgba(240,192,64,0.3);
+  color: rgba(255,255,255,0.9);
+  box-shadow: 0 0 12px rgba(240,192,64,0.1);
+}
+
+/* ═══ 存档区 ═══ */
+.saveSection {
+  padding: 8px 12px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.saveLabel {
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.saveBtns {
+  display: flex;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.saveBtn {
+  flex: 1;
+  padding: 5px;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: var(--radius-xs);
+  background: rgba(255,255,255,0.03);
+  color: rgba(255,255,255,0.4);
+  font-size: var(--text-xs);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.saveBtn:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.18);
+  color: rgba(255,255,255,0.7);
+}
+
+/* ═══ 周开始界面 ═══ */
+.weekStart {
+  text-align: center;
+  padding: 60px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+.weekStart h2 {
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+  color: var(--navy-700);
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px rgba(26,58,92,0.1);
+}
+
+.weekStart p {
+  font-size: var(--text-md);
+  color: var(--cream-600);
+  margin-bottom: 24px;
+}
+
+.startWeekBtn {
+  padding: 14px 48px;
+  background: linear-gradient(135deg, var(--navy-700), var(--navy-600));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-game);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  box-shadow:
+    0 4px 16px rgba(26,58,92,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  letter-spacing: 0.04em;
+}
+
+.startWeekBtn:hover {
+  background: linear-gradient(135deg, var(--navy-600), var(--navy-500));
+  box-shadow:
+    0 6px 24px rgba(26,58,92,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-1px);
+}
+
+/* ═══ 考试通知 ═══ */
+.examNotice {
+  text-align: center;
+  padding: 60px 20px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.examNotice h2 {
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+  color: var(--red-a);
+  margin-bottom: 8px;
+}
+
+.examNotice p {
+  font-size: var(--text-md);
+  color: var(--cream-600);
+  margin-bottom: 24px;
+}
+
+.startExamBtn {
+  padding: 14px 48px;
+  background: linear-gradient(135deg, var(--red-500), var(--red-600));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-game);
+  font-size: var(--text-lg);
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  box-shadow:
+    0 4px 16px rgba(192,57,43,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+}
+
+.startExamBtn:hover {
+  background: linear-gradient(135deg, var(--red-400), var(--red-500));
+  box-shadow:
+    0 6px 24px rgba(192,57,43,0.45),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  transform: translateY(-1px);
+}

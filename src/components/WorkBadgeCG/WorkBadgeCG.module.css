@@ -1,0 +1,112 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle, #1a1a2e 0%, #0a0a14 100%);
+  gap: 24px;
+}
+
+.badge {
+  width: 380px;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 0 80px rgba(240, 192, 64, 0.2);
+}
+
+.enter {
+  animation: slideUp 0.8s ease-out;
+}
+
+.show {
+  animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(60px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 40px rgba(240, 192, 64, 0.15); }
+  to { box-shadow: 0 0 80px rgba(240, 192, 64, 0.35); }
+}
+
+.badgeHeader {
+  background: #1a3a5c;
+  color: #fff;
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.emblem {
+  width: 44px;
+  height: 44px;
+  background: #f0c040;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  color: #1a3a5c;
+}
+
+.uniName { font-size: 15px; font-weight: bold; }
+.uniSub { font-size: 10px; opacity: 0.7; }
+
+.badgeBody {
+  padding: 24px 20px;
+  display: flex;
+  gap: 16px;
+}
+
+.photoSlot {
+  width: 80px;
+  height: 100px;
+  background: #e8edf2;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #d0d7de;
+  overflow: hidden;
+}
+
+.photoImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.info { flex: 1; }
+.field { margin-bottom: 12px; }
+.label { display: block; font-size: 10px; color: #999; margin-bottom: 2px; }
+.value { font-size: 18px; font-weight: bold; color: #1a3a5c; }
+.badgeId { font-size: 10px; color: #999; margin-top: 8px; }
+
+.badgeFooter {
+  background: #f0f4f8;
+  padding: 8px 20px;
+  font-size: 10px;
+  color: #999;
+  text-align: center;
+  line-height: 1.6;
+}
+
+.stageText {
+  color: #f0c040;
+  font-size: 20px;
+  font-weight: bold;
+  animation: fadeIn 0.8s ease 0.5s both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

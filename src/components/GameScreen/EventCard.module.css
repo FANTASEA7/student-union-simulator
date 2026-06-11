@@ -1,0 +1,108 @@
+.card {
+  width: 420px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+}
+
+.cardEnter {
+  animation: slideIn 0.4s ease-out;
+}
+
+.cardExit {
+  animation: slideOut 0.3s ease-in forwards;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(30px) scale(0.95); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-20px); }
+}
+
+.image {
+  height: 140px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.imagePlaceholder {
+  font-size: 56px;
+}
+
+.typeBadge {
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 10px;
+  font-size: 10px;
+}
+
+.body {
+  padding: 20px;
+}
+
+.title {
+  font-size: 18px;
+  color: var(--color-primary);
+  margin-bottom: 8px;
+}
+
+.desc {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.choiceBtn {
+  border: 2px solid #e0d5c5;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 13px;
+  text-align: left;
+  background: #fefefe;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.choiceBtn:hover {
+  border-color: var(--color-warm-brown);
+  background: #fdfaf7;
+  transform: translateX(4px);
+}
+
+.choiceLetter {
+  color: var(--color-accent);
+  font-weight: bold;
+}
+
+.feedback {
+  font-size: 15px;
+  color: #333;
+  text-align: center;
+  padding: 20px;
+  line-height: 1.8;
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>角色切割预览 - 确认布局</title>
+<style>
+  body { background: #1a1a2e; color: #eee; font-family: sans-serif; padding: 20px; }
+  h1 { color: #fff; }
+  h2 { color: #ccc; margin-top: 30px; border-bottom: 1px solid #333; padding-bottom: 8px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 10px; margin: 10px 0; }
+  .card { text-align: center; background: #2a2a3e; padding: 8px; border-radius: 8px; }
+  .card img { max-width: 150px; max-height: 150px; border-radius: 4px; }
+  .card .label { font-size: 12px; margin-top: 4px; color: #aaa; }
+  .note { color: #888; font-size: 13px; margin: 5px 0; }
+</style>
+</head>
+<body>
+
+<h1>角色切割预览</h1>
+<p>下面是Image2按4种网格切割的结果。请确认哪种布局是正确的，以及每个位置的对应角色。</p>
+
+<h2>方案1: 2×3 网格 (512×512)</h2>
+<div class="grid">
+  <div class="card"><img src="/characters/yantou_shushu_2x3.png"><div class="label">[0] 烟头叔叔?</div></div>
+  <div class="card"><img src="/characters/ming_liuliu_2x3.png"><div class="label">[1] 明六六?</div></div>
+  <div class="card"><img src="/characters/qingdao_wang_2x3.png"><div class="label">[2] 青岛王?</div></div>
+  <div class="card"><img src="/characters/dingkai_zhizi_2x3.png"><div class="label">[3] 丁凯之子?</div></div>
+  <div class="card"><img src="/characters/xiao_dangao_2x3.png"><div class="label">[4] 小蛋糕?</div></div>
+  <div class="card"><img src="/characters/xinli_fuzeren_2x3.png"><div class="label">[5] 心理部负责人?</div></div>
+</div>
+
+<h2>方案2: 3×2 网格 (768×341)</h2>
+<div class="grid">
+  <div class="card"><img src="/characters/yantou_shushu_3x2.png"><div class="label">[0]</div></div>
+  <div class="card"><img src="/characters/ming_liuliu_3x2.png"><div class="label">[1]</div></div>
+  <div class="card"><img src="/characters/qingdao_wang_3x2.png"><div class="label">[2]</div></div>
+  <div class="card"><img src="/characters/dingkai_zhizi_3x2.png"><div class="label">[3]</div></div>
+  <div class="card"><img src="/characters/xiao_dangao_3x2.png"><div class="label">[4]</div></div>
+  <div class="card"><img src="/characters/xinli_fuzeren_3x2.png"><div class="label">[5]</div></div>
+</div>
+
+<h2>方案3: 1×6 横排 (256×1024)</h2>
+<div class="grid">
+  <div class="card"><img src="/characters/yantou_shushu_1x6.png"><div class="label">[0]</div></div>
+  <div class="card"><img src="/characters/ming_liuliu_1x6.png"><div class="label">[1]</div></div>
+  <div class="card"><img src="/characters/qingdao_wang_1x6.png"><div class="label">[2]</div></div>
+  <div class="card"><img src="/characters/dingkai_zhizi_1x6.png"><div class="label">[3]</div></div>
+  <div class="card"><img src="/characters/xiao_dangao_1x6.png"><div class="label">[4]</div></div>
+  <div class="card"><img src="/characters/xinli_fuzeren_1x6.png"><div class="label">[5]</div></div>
+</div>
+
+<h2>方案4: 6×1 竖排 (1536×170)</h2>
+<div class="grid">
+  <div class="card"><img src="/characters/yantou_shushu_6x1.png"><div class="label">[0]</div></div>
+  <div class="card"><img src="/characters/ming_liuliu_6x1.png"><div class="label">[1]</div></div>
+  <div class="card"><img src="/characters/qingdao_wang_6x1.png"><div class="label">[2]</div></div>
+  <div class="card"><img src="/characters/dingkai_zhizi_6x1.png"><div class="label">[3]</div></div>
+  <div class="card"><img src="/characters/xiao_dangao_6x1.png"><div class="label">[4]</div></div>
+  <div class="card"><img src="/characters/xinli_fuzeren_6x1.png"><div class="label">[5]</div></div>
+</div>
+
+<h2>背景预览 (Image1)</h2>
+<p class="note">1672×941 — 将用作主界面背景</p>
+<img src="/main_bg_half.png" style="max-width: 800px; border-radius: 4px;">
+
+</body>
+</html>

@@ -1,0 +1,105 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.container h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1A3A5C;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.section {
+  margin-bottom: 30px;
+}
+
+.section h3 {
+  font-size: 16px;
+  color: #1A3A5C;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.empty {
+  font-size: 14px;
+  color: #aaa;
+  text-align: center;
+  padding: 16px;
+}
+
+.endingEntry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  background: #fafaf8;
+  margin-bottom: 6px;
+}
+
+.weekNum {
+  font-weight: 700;
+  color: #F0C040;
+  font-size: 13px;
+}
+
+.endingTitle {
+  flex: 1;
+  font-weight: 600;
+  color: #1A3A5C;
+  font-size: 14px;
+}
+
+.endingDate {
+  font-size: 12px;
+  color: #888;
+}
+
+.achievementGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px;
+}
+
+.achievementItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  background: #fafaf8;
+  font-size: 13px;
+}
+
+.locked {
+  opacity: 0.4;
+}
+
+.achievementIcon {
+  font-size: 18px;
+}
+
+.achievementName {
+  font-weight: 600;
+  color: #1A3A5C;
+}
+
+.backBtn {
+  display: block;
+  margin: 30px auto 0;
+  padding: 10px 32px;
+  background: #1A3A5C;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.backBtn:hover {
+  background: #234b73;
+}

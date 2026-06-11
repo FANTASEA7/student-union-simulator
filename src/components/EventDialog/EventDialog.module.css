@@ -1,0 +1,239 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: relative;
+  overflow: hidden;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 30% 50%, rgba(0,0,0,0.15), rgba(0,0,0,0.5));
+  pointer-events: none;
+}
+
+/* ===== 左栏 ===== */
+.leftPanel {
+  width: 35%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  z-index: 1;
+}
+
+.portrait {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid rgba(232, 213, 176, 0.5);
+  box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+}
+
+.genericPortrait {
+  width: 130px;
+  height: 130px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 56px;
+  border: 3px solid rgba(255, 255, 255, 0.15);
+}
+
+.charName {
+  color: #e8d5b0;
+  font-weight: bold;
+  font-size: 18px;
+  margin-top: 16px;
+}
+
+.charRole {
+  color: #b8a088;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ===== 右栏 ===== */
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 48px;
+  justify-content: center;
+  z-index: 1;
+}
+
+/* ===== 旁白 ===== */
+.narrationBox {
+  background: rgba(0,0,0,0.4);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  padding: 28px 32px;
+  animation: fadeSlideIn 0.6s ease;
+}
+
+.narrationBoxMini {
+  background: rgba(0,0,0,0.25);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 16px;
+}
+
+.eventType {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 8px;
+}
+
+.eventTitle {
+  font-size: 24px;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+}
+
+.eventDesc {
+  font-size: 15px;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.8;
+}
+
+/* ===== 选项 ===== */
+.choices {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  animation: fadeSlideIn 0.5s ease;
+}
+
+.choiceBtn {
+  background: rgba(255, 255, 255, 0.92);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  padding: 14px 18px;
+  font-size: 14px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.choiceBtn:hover {
+  background: #fff;
+  border-color: #d4a574;
+  transform: translateX(6px);
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.choiceLabel {
+  color: #8b7355;
+  font-weight: bold;
+  font-size: 12px;
+  margin-right: 4px;
+}
+
+.choiceText {
+  font-weight: 600;
+  font-size: 15px;
+  color: #1A3A5C;
+}
+
+.choiceEffects {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.effectPos {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: #e8f5e9;
+  color: #27ae60;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+.effectNeg {
+  font-size: 11px;
+  padding: 2px 8px;
+  background: #fef0f0;
+  color: #C0392B;
+  border-radius: 8px;
+  font-weight: 600;
+}
+
+/* ===== 反馈 ===== */
+.feedbackBox {
+  background: rgba(0,0,0,0.5);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  animation: fadeSlideIn 0.6s ease;
+}
+
+.chosenText {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  font-style: italic;
+  margin-bottom: 16px;
+}
+
+.feedbackText {
+  font-size: 20px;
+  color: #fff;
+  line-height: 1.8;
+  margin-bottom: 20px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+}
+
+.feedbackEffects {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.fxBadge {
+  font-size: 13px;
+  padding: 6px 14px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.fxPos {
+  background: rgba(39, 174, 96, 0.3);
+  color: #2ecc71;
+  border: 1px solid rgba(39, 174, 96, 0.4);
+}
+
+.fxNeg {
+  background: rgba(192, 57, 43, 0.3);
+  color: #e74c3c;
+  border: 1px solid rgba(192, 57, 43, 0.4);
+}
+
+/* ===== 动画 ===== */
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

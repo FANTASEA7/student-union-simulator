@@ -1,0 +1,51 @@
+/* src/components/SportsFestival/GameCG.module.css */
+.container {
+  width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
+  background: linear-gradient(170deg, #0d1b2a, #1b2838);
+  position: relative; overflow: hidden;
+}
+.overlay {
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 30%, rgba(240,192,64,0.06), transparent 50%);
+  pointer-events: none;
+}
+.card {
+  position: relative; z-index: 1;
+  background: rgba(255,255,255,0.06); backdrop-filter: blur(16px);
+  border: 1px solid rgba(240,192,64,0.15);
+  border-radius: 24px; padding: 40px 48px;
+  max-width: 440px; width: 85%; text-align: center;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+  transition: opacity 0.5s, transform 0.5s;
+}
+.stampPhase { padding: 32px 40px; }
+.cgEmoji { font-size: 56px; margin-bottom: 12px; }
+.title {
+  font-family: "ZCOOL XiaoWei", serif; font-size: 24px;
+  color: #f0c040; margin: 0 0 16px;
+  text-shadow: 0 0 12px rgba(240,192,64,0.3); letter-spacing: 4px;
+}
+.scene {
+  font-size: 15px; color: rgba(255,255,255,0.75); line-height: 2;
+  font-family: "Microsoft YaHei", sans-serif; white-space: pre-line; margin-bottom: 16px;
+}
+.rating { font-size: 22px; font-weight: bold; }
+.stampContainer { text-align: center; }
+.stampLabel { font-size: 14px; color: rgba(255,255,255,0.5); margin-bottom: 16px; }
+.stamp {
+  display: inline-flex; flex-direction: column; align-items: center;
+  width: 100px; height: 100px; border-radius: 50%;
+  border: 4px solid #e74c3c; background: rgba(231,76,60,0.08);
+  justify-content: center; margin-bottom: 12px;
+}
+.stampAnim {
+  animation: stampIn 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+}
+@keyframes stampIn {
+  0% { transform: scale(2) rotate(-30deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+.stampIcon { font-size: 28px; }
+.stampText { font-size: 11px; color: #e74c3c; font-weight: bold; margin-top: 2px; }
+.stampStars { font-size: 22px; color: #f0c040; }

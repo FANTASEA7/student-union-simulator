@@ -1,0 +1,102 @@
+/* ═══ 事件日志 — 深色通知流 ═══ */
+
+.log {
+  padding: 10px 14px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+
+.title {
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-family: var(--font-game);
+}
+
+.entry {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.5);
+  margin-bottom: 6px;
+  line-height: 1.5;
+  padding: 4px 8px;
+  border-radius: var(--radius-sm);
+  background: rgba(255,255,255,0.02);
+  border-left: 3px solid transparent;
+  transition: all 0.2s;
+}
+
+.entry:hover {
+  background: rgba(255,255,255,0.04);
+  border-left-color: rgba(240,192,64,0.3);
+}
+
+.week {
+  color: var(--gold-400);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+  font-size: 10px;
+  background: rgba(240,192,64,0.08);
+  padding: 1px 6px;
+  border-radius: var(--radius-xs);
+}
+
+.text {
+  color: rgba(255,255,255,0.55);
+}
+
+.empty {
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.2);
+  text-align: center;
+  padding: 8px;
+  font-style: italic;
+}
+
+/* ═══ 全屏浅色模式 ═══ */
+.fullPage {
+  padding: 32px 40px;
+  border-top: none;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.titleFull {
+  font-size: var(--text-xl);
+  color: var(--navy-700) !important;
+  text-transform: none;
+  margin-bottom: 20px;
+  font-family: var(--font-game);
+  letter-spacing: 0.04em;
+}
+
+.entryFull {
+  background: rgba(255,255,255,0.6) !important;
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(0,0,0,0.04);
+  border-radius: var(--radius-md);
+  padding: 10px 14px !important;
+  margin-bottom: 8px;
+  font-size: var(--text-base);
+  color: var(--navy-700);
+}
+
+.entryFull:hover {
+  background: rgba(255,255,255,0.8) !important;
+  border-left-color: var(--gold-400) !important;
+}
+
+.textFull {
+  color: var(--navy-600) !important;
+  font-size: var(--text-base);
+}
+
+.emptyFull {
+  font-size: var(--text-md);
+  color: var(--cream-500) !important;
+  font-family: var(--font-game);
+}

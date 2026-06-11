@@ -1,0 +1,255 @@
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  position: relative;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(240, 192, 64, 0.05) 0%, transparent 60%);
+}
+
+.content {
+  position: relative;
+  text-align: center;
+  z-index: 1;
+  max-width: 420px;
+  width: 100%;
+}
+
+.emblem {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--color-gold);
+  margin: 0 auto 24px;
+  display: block;
+  box-shadow: 0 0 30px rgba(240, 192, 64, 0.15);
+}
+
+.title {
+  font-size: 36px;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 4px;
+}
+
+.subtitle {
+  font-size: var(--font-size-base);
+  color: #999;
+  margin-bottom: 40px;
+}
+
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  align-items: center;
+}
+
+.btnPrimary {
+  padding: 12px 48px;
+  border: 2px solid var(--color-gold);
+  background: transparent;
+  color: var(--color-gold);
+  font-size: 16px;
+  border-radius: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btnPrimary:hover {
+  background: var(--color-gold);
+  color: var(--color-primary);
+}
+
+.btnSecondary {
+  padding: 10px 32px;
+  border: 1px solid #666;
+  background: transparent;
+  color: #999;
+  font-size: var(--font-size-base);
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+.btnSecondary:hover {
+  border-color: #999;
+  color: #fff;
+}
+
+.btnDisabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+/* ===== Save slot views ===== */
+.slotTitle {
+  font-size: 24px;
+  color: #fff;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.slotSubtitle {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 28px;
+}
+
+.slotList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.slotCard {
+  padding: 16px 20px;
+  border-radius: 12px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.slotUsed {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.slotUsed:hover {
+  background: rgba(255, 255, 255, 0.1);
+  border-color: var(--color-gold);
+  transform: translateX(4px);
+}
+
+.slotEmpty {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.slotEmpty:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateX(4px);
+}
+
+.slotEmptyDisabled {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: default;
+  opacity: 0.5;
+}
+
+.slotNumber {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-gold);
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.slotInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.slotName {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ddd;
+}
+
+.slotMeta {
+  font-size: 13px;
+  color: #888;
+}
+
+.slotTime {
+  font-size: 12px;
+  color: #666;
+  margin-top: 2px;
+}
+
+.slotOccupied {
+  font-size: 12px;
+  color: #855;
+  margin-top: 4px;
+}
+
+.slotEmptyHint {
+  font-size: 14px;
+  color: #555;
+  text-align: center;
+  padding: 10px 0;
+}
+
+.deleteBtn {
+  align-self: flex-start;
+  margin-top: 8px;
+  padding: 4px 14px;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  background: transparent;
+  color: #c66;
+  font-size: 12px;
+  border-radius: 12px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.deleteBtn:hover {
+  background: rgba(255, 100, 100, 0.15);
+}
+
+.deleteConfirm {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #c66;
+}
+
+.confirmYes, .confirmNo {
+  padding: 3px 12px;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  background: transparent;
+  color: #c66;
+  font-size: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.confirmYes:hover {
+  background: rgba(255, 100, 100, 0.2);
+}
+
+.confirmNo:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.backBtn {
+  padding: 10px 36px;
+  border: 1px solid #555;
+  background: transparent;
+  color: #888;
+  font-size: 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+
+.backBtn:hover {
+  border-color: #999;
+  color: #ccc;
+}

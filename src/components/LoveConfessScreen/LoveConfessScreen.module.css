@@ -1,0 +1,121 @@
+.container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  text-align: center;
+}
+
+.npcName {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1A3A5C;
+  margin-bottom: 8px;
+}
+
+.npcInfo {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 16px;
+}
+
+.dialogue {
+  font-size: 18px;
+  color: #555;
+  font-style: italic;
+  line-height: 1.6;
+  margin: 24px 0;
+  padding: 20px;
+  background: #fafaf8;
+  border-radius: 12px;
+  border-left: 3px solid #e74c3c;
+}
+
+.affinity {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 20px;
+}
+
+.affinityBar {
+  width: 200px;
+  height: 8px;
+  background: #eee;
+  border-radius: 4px;
+  margin: 8px auto;
+  overflow: hidden;
+}
+
+.affinityBarFill {
+  height: 100%;
+  background: linear-gradient(90deg, #e74c3c, #F0C040);
+  border-radius: 4px;
+}
+
+.rateBreakdown {
+  margin: 16px 0 12px;
+}
+
+.rateMain {
+  font-size: 20px;
+  font-weight: 700;
+  color: #e74c3c;
+  margin-bottom: 8px;
+}
+
+.rateParts {
+  display: flex; flex-wrap: wrap; gap: 4px 10px;
+  justify-content: center;
+}
+
+.ratePart {
+  font-size: 12px; color: #999;
+  background: rgba(0,0,0,0.04); padding: 2px 8px; border-radius: 6px;
+}
+
+.positive { color: #27ae60; font-weight: 600; }
+.negative { color: #e74c3c; font-weight: 600; }
+
+.resultSuccess {
+  font-size: 20px;
+  color: #e74c3c;
+  font-weight: 700;
+  margin: 20px 0;
+}
+
+.resultFail {
+  font-size: 18px;
+  color: #888;
+  margin: 20px 0;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.confessBtn {
+  padding: 12px 40px;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.confessBtn:disabled {
+  background: #ccc;
+  cursor: not-allowed;
+}
+
+.backBtn {
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #888;
+}

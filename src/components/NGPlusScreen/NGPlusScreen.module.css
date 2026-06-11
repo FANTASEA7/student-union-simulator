@@ -1,0 +1,137 @@
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1A3A5C;
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.points {
+  text-align: center;
+  font-size: 16px;
+  color: #F0C040;
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.section {
+  margin-bottom: 24px;
+}
+
+.section h3 {
+  font-size: 15px;
+  color: #1A3A5C;
+  margin-bottom: 12px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.statRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #f5f5f5;
+}
+
+.statLabel {
+  font-size: 14px;
+  color: #555;
+  width: 80px;
+}
+
+.statControls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.statControls button {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.statControls button:hover {
+  background: #f0f4f8;
+}
+
+.statControls button:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.statDots {
+  display: flex;
+  gap: 4px;
+}
+
+.dotFilled {
+  color: #F0C040;
+  font-size: 14px;
+}
+
+.dotEmpty {
+  color: #ddd;
+  font-size: 14px;
+}
+
+.specialOption {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 0;
+  font-size: 14px;
+  color: #555;
+  cursor: pointer;
+}
+
+.specialOption input {
+  width: 18px;
+  height: 18px;
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 30px;
+}
+
+.confirmBtn {
+  padding: 12px 40px;
+  background: #F0C040;
+  color: #1A3A5C;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.confirmBtn:hover {
+  background: #e0b830;
+}
+
+.skipBtn {
+  padding: 12px 24px;
+  background: transparent;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  color: #888;
+}

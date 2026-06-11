@@ -1,0 +1,498 @@
+/* src/components/Recruitment/RecruitmentInterview.module.css */
+
+.container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(170deg, #1a1a2e 0%, #16213e 50%, #0d1b2a 100%);
+  overflow: hidden;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 32px;
+  background: rgba(13, 27, 42, 0.7);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(240, 192, 64, 0.12);
+}
+
+.topTitle {
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-xl, 22px);
+  color: var(--gold-400, #f0c040);
+  letter-spacing: 1px;
+}
+
+.topInfo {
+  font-size: var(--text-sm, 14px);
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.mainArea {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* ═══ 左栏：候选人 ═══ */
+.leftPanel {
+  width: 320px;
+  min-width: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.03);
+  gap: 28px;
+}
+
+.candidateArea {
+  text-align: center;
+  position: relative;
+}
+
+.candidateAvatar {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.08);
+  border: 3px solid rgba(240, 192, 64, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  box-shadow: 0 0 32px rgba(240, 192, 64, 0.1);
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+  font-family: inherit;
+}
+
+.candidateAvatar:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 40px rgba(240, 192, 64, 0.25);
+  border-color: rgba(240, 192, 64, 0.5);
+}
+
+.avatarHint {
+  position: absolute;
+  bottom: -4px;
+  right: -4px;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: var(--gold-400, #f0c040);
+  color: var(--navy-900, #0d1b2a);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(240, 192, 64, 0.4);
+}
+
+.avatarIcon {
+  font-size: 48px;
+}
+
+.candidateName {
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-xl, 24px);
+  color: #fff;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
+}
+
+.candidateQuality {
+  font-size: var(--text-sm, 14px);
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.candidateQuality[data-quality="legendary"] {
+  color: var(--gold-400, #f0c040);
+}
+
+.candidateQuality[data-quality="epic"] {
+  color: #a855f7;
+}
+
+.candidateQuality[data-quality="rare"] {
+  color: #3b82f6;
+}
+
+.candidateQuality[data-quality="common"] {
+  color: #9ca3af;
+}
+
+.candidateEnergy {
+  font-size: var(--text-sm, 14px);
+  color: rgba(255, 255, 255, 0.5);
+}
+
+/* 数值提示浮层 */
+.tipBox {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(13, 27, 42, 0.96);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(240, 192, 64, 0.4);
+  border-radius: 16px;
+  padding: 20px 24px;
+  min-width: 260px;
+  z-index: 10;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  text-align: left;
+}
+
+.tipClose {
+  position: absolute;
+  top: 8px;
+  right: 10px;
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  font-size: 14px;
+  padding: 2px 6px;
+  font-family: inherit;
+}
+
+.tipClose:hover {
+  color: #fff;
+}
+
+.tipLine {
+  font-size: var(--text-sm, 14px);
+  color: rgba(255, 255, 255, 0.85);
+  margin: 0 0 4px;
+  line-height: 1.6;
+}
+
+.tipLine:first-of-type {
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-base, 16px);
+  color: var(--gold-400, #f0c040);
+  margin-bottom: 8px;
+}
+
+/* 红色对话框按钮 */
+.resumeBtn {
+  padding: 16px 36px;
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-lg, 18px);
+  color: #fff;
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  border: 2px solid #e74c3c;
+  border-radius: 16px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 20px rgba(231, 76, 60, 0.35);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(231, 76, 60, 0.35); }
+  50% { box-shadow: 0 4px 30px rgba(231, 76, 60, 0.6); }
+}
+
+.resumeBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 28px rgba(231, 76, 60, 0.5);
+}
+
+/* ═══ 右栏：简历/问题/决定 ═══ */
+.rightPanel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 32px 40px;
+}
+
+/* 简历卡片 */
+.resumeCard {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(12px);
+  border-radius: 20px;
+  padding: 28px 32px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+  margin-bottom: 24px;
+}
+
+.resumeTitle {
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-lg, 20px);
+  color: var(--navy-800, #152238);
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid rgba(21, 34, 56, 0.08);
+}
+
+.resumeGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px 24px;
+}
+
+.resumeRow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: var(--text-sm, 14px);
+  color: var(--navy-700, #1b3a5c);
+}
+
+.resumeRow:last-child {
+  grid-column: 1 / -1;
+}
+
+.resumeLabel {
+  font-size: var(--text-xs, 12px);
+  color: var(--navy-400, #8a9bb0);
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resumeMotto {
+  font-style: italic;
+  color: var(--navy-500, #5a6d80);
+}
+
+.resumeQuality {
+  font-weight: 600;
+}
+
+.resumeQuality[data-quality="legendary"] { color: #b8860b; }
+.resumeQuality[data-quality="epic"] { color: #7c3aed; }
+.resumeQuality[data-quality="rare"] { color: #2563eb; }
+.resumeQuality[data-quality="common"] { color: #6b7280; }
+
+/* 问题区 */
+.questionSection {
+  margin-bottom: 20px;
+}
+
+.questionTitle {
+  font-size: var(--text-base, 16px);
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0 0 8px;
+}
+
+.questionHint {
+  font-size: var(--text-xs, 13px);
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 14px;
+}
+
+.questionList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.questionBtn {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 18px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  text-align: left;
+  font-family: inherit;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.questionBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(240, 192, 64, 0.4);
+}
+
+.qCategory {
+  font-size: var(--text-xs, 12px);
+  color: var(--gold-300, #f5d060);
+  white-space: nowrap;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.qText {
+  font-size: var(--text-sm, 14px);
+  line-height: 1.5;
+}
+
+/* 反馈 */
+.feedbackBox {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 20px 24px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+.feedbackText {
+  font-size: var(--text-sm, 14px);
+  color: rgba(255, 255, 255, 0.8);
+  line-height: 1.7;
+  margin: 0 0 16px;
+  white-space: pre-line;
+}
+
+.nextQBtn {
+  padding: 10px 28px;
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-sm, 14px);
+  color: #fff;
+  background: rgba(240, 192, 64, 0.2);
+  border: 1px solid rgba(240, 192, 64, 0.3);
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.nextQBtn:hover {
+  background: rgba(240, 192, 64, 0.3);
+}
+
+/* 决定 */
+.decisionSection {
+  text-align: center;
+  padding: 20px 0;
+}
+
+.decisionTitle {
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-lg, 20px);
+  color: #fff;
+  margin: 0 0 8px;
+}
+
+.decisionHint {
+  font-size: var(--text-sm, 14px);
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 24px;
+}
+
+.decisionBtns {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.hireBtn {
+  padding: 14px 32px;
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-base, 16px);
+  color: #fff;
+  background: linear-gradient(135deg, #27ae60, #2ecc71);
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: 1px;
+}
+
+.hireBtn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(39, 174, 96, 0.4);
+}
+
+.hireBtn:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.rejectBtn {
+  padding: 14px 32px;
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-base, 16px);
+  color: rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+  letter-spacing: 1px;
+}
+
+.rejectBtn:hover {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.maxWarning {
+  font-size: var(--text-xs, 12px);
+  color: #e74c3c;
+  margin-top: 12px;
+}
+
+/* 结果 */
+.resultBox {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.resultHired {
+  margin-bottom: 28px;
+}
+
+.resultRejected {
+  margin-bottom: 28px;
+}
+
+.resultIcon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.resultText {
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-2xl, 28px);
+  margin: 0 0 8px;
+  letter-spacing: 2px;
+}
+
+.resultHired .resultText {
+  color: #2ecc71;
+  text-shadow: 0 0 20px rgba(46, 204, 113, 0.3);
+}
+
+.resultRejected .resultText {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.resultSub {
+  font-size: var(--text-sm, 15px);
+  color: rgba(255, 255, 255, 0.6);
+  margin: 0;
+}
+
+.nextBtn {
+  padding: 12px 36px;
+  font-family: "ZCOOL XiaoWei", serif;
+  font-size: var(--text-base, 16px);
+  color: #fff;
+  background: linear-gradient(135deg, var(--navy-700, #1b3a5c), var(--navy-900, #0d1b2a));
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  letter-spacing: 1px;
+}
+
+.nextBtn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(13, 27, 42, 0.5);
+}

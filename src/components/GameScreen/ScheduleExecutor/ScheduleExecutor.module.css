@@ -1,0 +1,602 @@
+/* ═══ 日程执行器 — AAA 游戏 UI ═══ */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+  padding: 20px 20px;
+  height: 100%;
+  overflow-y: auto;
+  position: relative;
+  z-index: 1;
+}
+
+/* ═══ 进度环 ═══ */
+.progressBar {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.progressDot {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.4s var(--ease-out);
+  position: relative;
+  border: 2px solid rgba(0,0,0,0.06);
+}
+
+.progressDot::after {
+  content: '';
+  position: absolute;
+  right: -22px;
+  top: 50%;
+  width: 18px;
+  height: 1px;
+  background: rgba(0,0,0,0.08);
+}
+
+.progressDot:last-child::after {
+  display: none;
+}
+
+.dotDone {
+  background: linear-gradient(135deg, var(--green-400), var(--green-500));
+  color: #fff;
+  border-color: var(--green-400);
+  box-shadow: 0 0 12px rgba(106,171,106,0.3);
+}
+
+.dotActive {
+  background: linear-gradient(135deg, var(--navy-700), var(--navy-600));
+  color: #fff;
+  border-color: var(--navy-400);
+  box-shadow:
+    0 0 0 4px rgba(26,58,92,0.2),
+    0 0 20px rgba(74,158,218,0.15);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+
+@keyframes dotPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 4px rgba(26,58,92,0.2),
+      0 0 20px rgba(74,158,218,0.15);
+  }
+  50% {
+    box-shadow:
+      0 0 0 10px rgba(26,58,92,0.05),
+      0 0 30px rgba(74,158,218,0.25);
+  }
+}
+
+.dotLabel {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+}
+
+.progress {
+  font-size: var(--text-base);
+  color: var(--cream-600);
+  font-weight: 500;
+  font-family: var(--font-game);
+  letter-spacing: 0.03em;
+}
+
+/* ═══ 主画面卡片 — 毛玻璃 ═══ */
+.dayAnimation {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 36px 44px;
+  background: rgba(255,255,255,0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255,255,255,0.5);
+  min-width: 300px;
+  box-shadow:
+    var(--shadow-md),
+    inset 0 1px 0 rgba(255,255,255,0.5);
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s var(--ease-out);
+}
+
+.animateIn {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.dayTitle {
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--navy-700);
+  letter-spacing: 0.04em;
+}
+
+/* ═══ NPC 客串 ═══ */
+.npcCameo {
+  background: linear-gradient(135deg, rgba(255,182,193,0.15), rgba(200,160,220,0.12));
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(240,192,208,0.3);
+  border-radius: var(--radius-md);
+  padding: 12px 20px;
+  text-align: center;
+  animation: cameoFade 0.5s var(--ease-out);
+}
+
+@keyframes cameoFade {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.npcCameoIcon {
+  font-size: 32px;
+  margin-bottom: 4px;
+}
+
+.npcCameoText {
+  font-family: var(--font-game);
+  font-size: var(--text-base);
+  color: #c05070;
+  font-weight: 500;
+  font-style: italic;
+}
+
+/* ═══ Combo 特效 ═══ */
+.comboEffect {
+  background: linear-gradient(
+    135deg,
+    var(--gold-200),
+    var(--gold-300)
+  );
+  border: 2px solid var(--gold-400);
+  border-radius: var(--radius-lg);
+  padding: 14px 28px;
+  text-align: center;
+  animation: comboBoom 0.5s var(--ease-spring);
+  box-shadow: var(--shadow-glow-gold);
+}
+
+@keyframes comboBoom {
+  0% { transform: scale(0.2); opacity: 0; }
+  50% { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.comboIcon {
+  font-size: 40px;
+}
+
+.comboText {
+  font-family: var(--font-game);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--gold-600);
+  margin: 4px 0;
+  letter-spacing: 0.04em;
+}
+
+.comboBonus {
+  font-size: var(--text-sm);
+  color: var(--gold-600);
+  background: rgba(255,255,255,0.6);
+  border-radius: var(--radius-md);
+  padding: 3px 12px;
+  font-weight: 500;
+}
+
+/* ═══ 活动展示 ═══ */
+.activityDisplay {
+  font-size: 64px;
+  margin: 8px 0;
+  animation: iconBounce 0.6s var(--ease-spring);
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+}
+
+@keyframes iconBounce {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.2); }
+  100% { transform: scale(1); }
+}
+
+.activityName {
+  font-family: var(--font-game);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--navy-700);
+  letter-spacing: 0.03em;
+}
+
+.specialEffectLabel {
+  font-size: var(--text-xs);
+  color: var(--gold-600);
+  background: rgba(240,192,64,0.1);
+  border-radius: var(--radius-full);
+  padding: 4px 14px;
+  font-weight: 500;
+  border: 1px solid rgba(240,192,64,0.2);
+}
+
+/* ═══ 属性变化 ═══ */
+.statChanges {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+  animation: fadeUp 0.4s var(--ease-out);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.statChange {
+  font-size: var(--text-sm);
+  padding: 4px 12px;
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.positive {
+  background: rgba(39,174,96,0.1);
+  color: var(--green-500);
+  border: 1px solid rgba(39,174,96,0.2);
+}
+
+.negative {
+  background: rgba(192,57,43,0.08);
+  color: var(--red-a);
+  border: 1px solid rgba(192,57,43,0.15);
+}
+
+/* ═══ 继续按钮 ═══ */
+.continueBtn {
+  margin-top: 16px;
+  padding: 12px 36px;
+  background: linear-gradient(135deg, var(--navy-700), var(--navy-600));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  font-family: var(--font-game);
+  font-size: var(--text-md);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  box-shadow:
+    0 2px 8px rgba(26,58,92,0.3),
+    inset 0 1px 0 rgba(255,255,255,0.1);
+  letter-spacing: 0.04em;
+}
+
+.continueBtn:hover {
+  background: linear-gradient(135deg, var(--navy-600), var(--navy-500));
+  transform: translateY(-2px);
+  box-shadow:
+    0 6px 20px rgba(26,58,92,0.4),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+}
+
+/* ═══ 本周总览 ═══ */
+.weekOverview {
+  display: flex;
+  gap: 8px;
+  padding: 12px;
+  background: rgba(255,255,255,0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255,255,255,0.3);
+}
+
+.overviewDay {
+  width: 52px;
+  padding: 8px 4px;
+  text-align: center;
+  border-radius: var(--radius-sm);
+  transition: all 0.3s;
+}
+
+.overviewActive {
+  background: rgba(26,58,92,0.06);
+  border: 1px solid rgba(26,58,92,0.15);
+}
+
+.overviewDone {
+  opacity: 0.4;
+}
+
+.overviewLabel {
+  font-size: 10px;
+  color: var(--cream-600);
+  margin-bottom: 4px;
+  font-weight: 500;
+}
+
+.overviewIcon {
+  font-size: 20px;
+}
+
+/* ═══ 突发事件弹窗 — 毛玻璃 ═══ */
+.interruptOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,0.7);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+}
+
+.interruptCard {
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: var(--radius-xl);
+  padding: 32px 28px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  border: 1px solid rgba(255,255,255,0.5);
+  box-shadow:
+    var(--shadow-xl),
+    inset 0 1px 0 rgba(255,255,255,0.4);
+  animation: interruptPop 0.4s var(--ease-spring);
+}
+
+@keyframes interruptPop {
+  from { transform: scale(0.7); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.interruptIcon {
+  font-size: 52px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+}
+
+.interruptTitle {
+  font-family: var(--font-game);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--navy-700);
+  margin-bottom: 8px;
+  letter-spacing: 0.04em;
+}
+
+.interruptDesc {
+  font-size: var(--text-base);
+  color: var(--cream-600);
+  margin-bottom: 22px;
+  line-height: 1.5;
+}
+
+.interruptChoices {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.interruptChoice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 12px 16px;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.6);
+  cursor: pointer;
+  transition: all 0.2s var(--ease-out);
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+.interruptChoice:hover {
+  border-color: var(--navy-400);
+  background: rgba(26,58,92,0.04);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-sm);
+}
+
+.choiceText {
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--navy-700);
+  margin-bottom: 4px;
+}
+
+.choiceEffects {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.effectPos {
+  font-size: var(--text-xs);
+  padding: 2px 10px;
+  background: rgba(39,174,96,0.1);
+  color: var(--green-500);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  border: 1px solid rgba(39,174,96,0.2);
+}
+
+.effectNeg {
+  font-size: var(--text-xs);
+  padding: 2px 10px;
+  background: rgba(192,57,43,0.08);
+  color: var(--red-a);
+  border-radius: var(--radius-full);
+  font-weight: 600;
+  border: 1px solid rgba(192,57,43,0.15);
+}
+
+/* ═══ 周总结 — 深色玻璃 ═══ */
+.weekSummaryOverlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(13,27,42,0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  animation: fadeIn 0.3s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.weekSummaryCard {
+  background: linear-gradient(
+    170deg,
+    rgba(21,34,56,0.95) 0%,
+    rgba(13,27,42,0.95) 100%
+  );
+  backdrop-filter: blur(24px);
+  border: 1px solid rgba(240,192,64,0.12);
+  border-radius: var(--radius-xl);
+  padding: 36px 32px;
+  max-width: 500px;
+  width: 90%;
+  text-align: center;
+  box-shadow:
+    0 16px 48px rgba(0,0,0,0.5),
+    0 0 60px rgba(240,192,64,0.05);
+  animation: summaryPop 0.45s var(--ease-spring);
+}
+
+@keyframes summaryPop {
+  from { transform: scale(0.85); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.weekSummaryIcon {
+  font-size: 56px;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+}
+
+.weekSummaryTitle {
+  font-family: var(--font-game);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: #fff;
+  margin-bottom: 4px;
+  letter-spacing: 0.05em;
+  text-shadow: 0 0 20px rgba(240,192,64,0.2);
+}
+
+.weekSummarySub {
+  font-size: var(--text-base);
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 24px;
+}
+
+.weekComboList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.weekComboItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  border: 1px solid rgba(240,192,64,0.2);
+  border-radius: var(--radius-lg);
+  background: rgba(255,255,255,0.04);
+  text-align: left;
+  transition: all 0.2s;
+}
+
+.weekComboItem:hover {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(240,192,64,0.35);
+}
+
+.weekComboIcon {
+  font-size: 32px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.weekComboInfo {
+  flex: 1;
+}
+
+.weekComboName {
+  font-family: var(--font-game);
+  font-size: var(--text-md);
+  font-weight: 700;
+  color: var(--gold-400);
+  margin-bottom: 2px;
+  letter-spacing: 0.03em;
+}
+
+.weekComboDesc {
+  font-size: var(--text-xs);
+  color: rgba(255,255,255,0.45);
+  margin-bottom: 6px;
+}
+
+.weekComboEffects {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.noComboText {
+  font-family: var(--font-game);
+  font-size: var(--text-md);
+  color: rgba(255,255,255,0.35);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.noComboHint {
+  font-size: var(--text-sm);
+  color: rgba(255,255,255,0.2);
+}
+
+.weekSummaryBtn {
+  padding: 14px 44px;
+  background: linear-gradient(135deg, var(--green-400), var(--green-500));
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-lg);
+  font-family: var(--font-game);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s var(--ease-out);
+  box-shadow:
+    0 4px 16px rgba(106,171,106,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.15);
+  letter-spacing: 0.04em;
+}
+
+.weekSummaryBtn:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    0 8px 24px rgba(106,171,106,0.5),
+    inset 0 1px 0 rgba(255,255,255,0.2);
+}
